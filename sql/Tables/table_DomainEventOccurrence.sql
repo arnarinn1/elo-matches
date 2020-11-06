@@ -1,3 +1,6 @@
+USE Elo_Matches
+GO
+
 CREATE TABLE DomainEventOccurrence
 ( Id                      INT IDENTITY(1,1) NOT NULL
 , AggregateId             VARCHAR(64)       NOT NULL

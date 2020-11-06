@@ -1,3 +1,6 @@
+USE Elo_Matches
+GO
+
 CREATE TABLE PlayerLeaderBoard
 ( Id            UNIQUEIDENTIFIER  NOT NULL
 , SequenceId    INT IDENTITY(1,1) NOT NULL
