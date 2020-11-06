@@ -1,6 +1,3 @@
-USE Foosball
-GO
-
 CREATE TABLE Player
 ( Id                      UNIQUEIDENTIFIER  NOT NULL
 , SequenceId              INT IDENTITY(1,1) NOT NULL
@@ -8,7 +5,7 @@ CREATE TABLE Player
 , DisplayName             VARCHAR(128)      NOT NULL
 , Email                   VARCHAR(128)      NOT NULL
 , ActiveSince             DATETIME              NULL
-, DeactivatedSince        DATETIME              null
+, DeactivatedSince        DATETIME              NULL
 , EntryDate               DATETIME          NOT NULL
 )
 GO

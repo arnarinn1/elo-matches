@@ -1,6 +1,3 @@
-USE Foosball
-GO
-
 CREATE OR ALTER View vw_Player
 ( Id
 , SequenceId
@@ -24,5 +21,3 @@ SELECT Id
      , EntryDate
  FROM Player
 GO
-
-

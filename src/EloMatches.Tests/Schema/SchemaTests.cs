@@ -16,13 +16,13 @@ namespace EloMatches.Tests.Schema
         [Test]
         public async Task CommandSchemaTest()
         {
-            await PerformSchemaTest<EloMatchesCommandContext>("Server=localhost;Database=elo-matches;Trusted_Connection=True;MultipleActiveResultSets=true");
+            await PerformSchemaTest<EloMatchesCommandContext>("Server=localhost;Database=Elo_Matches;Trusted_Connection=True;MultipleActiveResultSets=true");
         }
 
         [Test]
         public async Task QuerySchemaTest()
         {
-            await PerformSchemaTest<EloMatchesQueryContext>("Server=localhost;Database=elo-matches;Trusted_Connection=True;MultipleActiveResultSets=true");
+            await PerformSchemaTest<EloMatchesQueryContext>("Server=localhost;Database=Elo_Matches;Trusted_Connection=True;MultipleActiveResultSets=true");
         }
 
         private async Task PerformSchemaTest<TContext>(string connectionString) where TContext : DbContext

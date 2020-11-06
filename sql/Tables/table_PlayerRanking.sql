@@ -1,6 +1,3 @@
-USE Foosball
-GO
-
 CREATE TABLE PlayerRanking
 ( Id                      UNIQUEIDENTIFIER  NOT NULL
 , SequenceId              INT IDENTITY(1,1) NOT NULL

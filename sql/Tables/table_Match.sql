@@ -1,6 +1,3 @@
-USE Foosball
-GO
-
 CREATE TABLE Match
 ( Id                                 INT IDENTITY(1,1) NOT NULL
  

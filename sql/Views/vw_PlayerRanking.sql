@@ -1,4 +1,4 @@
-USE Foosball
+USE Elo_Matches
 GO
 
 CREATE OR ALTER View vw_PlayerRanking

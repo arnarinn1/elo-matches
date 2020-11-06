@@ -1,4 +1,4 @@
-USE Foosball
+USE Elo_Matches
 GO
 
 CREATE OR ALTER View vw_Match
@@ -14,6 +14,9 @@ CREATE OR ALTER View vw_Match
 
 , WinnerScore
 , LoserScore
+
+, WinnerGameNumber
+, LoserGameNumber
 
 , EloRatingGainedForWinner
 , TotalEloRatingBeforeGameForWinner
@@ -42,6 +45,9 @@ SELECT m.Id
      
      , m.WinnerScore
      , m.LoserScore
+
+	 , m.WinnerGameNumber
+	 , m.LoserGameNumber
      
      , m.EloRatingGainedForWinner
      , m.TotalEloRatingBeforeGameForWinner
