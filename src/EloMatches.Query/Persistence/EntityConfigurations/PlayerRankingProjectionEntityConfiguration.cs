@@ -8,7 +8,7 @@ namespace EloMatches.Query.Persistence.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<PlayerRankingProjection> builder)
         {
-            builder.ToTable("vw_PlayerRanking");
+            builder.ToView("vw_PlayerRanking");
 
             builder.Property(x => x.CurrentEloRating).HasPrecision(10, 6);
             builder.Property(x => x.AverageEloRating).HasPrecision(10, 6);
