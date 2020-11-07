@@ -9,11 +9,11 @@ namespace EloMatches.Domain.AggregateModels.PlayerLeaderBoardAggregate.DomainEve
         {
             PlayerId = playerId;
             EloRating = eloRating;
-            CurrentRank = rank;
+            Rank = rank;
         }
 
         public PlayerId PlayerId { get; }
         public decimal EloRating { get; }
-        public int CurrentRank { get; }
+        public int Rank { get; }
     }
 }

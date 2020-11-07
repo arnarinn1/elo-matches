@@ -1,4 +1,5 @@
 ﻿using System;
+using EloMatches.Domain.AggregateModels.PlayerAggregate;
 
 namespace EloMatches.Domain.AggregateModels.PlayerLeaderBoardAggregate
 {
@@ -14,5 +15,8 @@ namespace EloMatches.Domain.AggregateModels.PlayerLeaderBoardAggregate
         public Guid PlayerId { get; set; }
         public decimal EloRating { get; set; }
         public int Rank { get; set; }
+
+        public PlayerId GetPlayerId() 
+            => new PlayerId(PlayerId);
     }
 }

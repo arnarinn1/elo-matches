@@ -18,7 +18,7 @@ namespace EloMatches.Domain.AggregateModels.PlayerLeaderBoardAggregate
 
         public void AddPlayerToLeaderBoard(PlayerId playerId, decimal eloRating)
         {
-            if (Players.Any(x => x.PlayerId == playerId.Id))
+            if (Players.Any(x => x.PlayerId == playerId))
                 return;
 
             var rank = Players.OrderByDescending(x => x.EloRating).Count(x => x.EloRating > eloRating) + 1;
@@ -49,44 +49,40 @@ namespace EloMatches.Domain.AggregateModels.PlayerLeaderBoardAggregate
 
         private void Ascend(PlayerOnLeaderBoard player, decimal eloDifferenceForLastGame)
         {
-            var currentRating = player.EloRating;
-            player.EloRating = currentRating + eloDifferenceForLastGame;
+            var (currentRank, currentRating) = (player.Rank, player.EloRating);
+            UpdatePlayer(player, eloDifferenceForLastGame);
 
-            var currentRank = player.Rank;
-            var updatedRank = Players.OrderByDescending(x => x.EloRating).Count(x => x.EloRating > player.EloRating) + 1;
-
-            if (currentRank == updatedRank)
+            if (currentRank == player.Rank)
                 return;
 
-            player.Rank = updatedRank;
-
-            AddDomainEvent(new PlayerAscendedOnLeaderBoard(new PlayerId(player.PlayerId), currentRank, updatedRank));
+            AddDomainEvent(new PlayerAscendedOnLeaderBoard(player.GetPlayerId(), currentRank, player.Rank));
 
             foreach (var playerToDescend in Players.Where(x => x.EloRating < player.EloRating && x.EloRating > currentRating))
             {
-                AddDomainEvent(new PlayerDescendedOnLeaderBoard(new PlayerId(player.PlayerId), playerToDescend.Rank, ++playerToDescend.Rank));
+                AddDomainEvent(new PlayerDescendedOnLeaderBoard(playerToDescend.GetPlayerId(), playerToDescend.Rank, ++playerToDescend.Rank));
             }
         }
 
         private void Descend(PlayerOnLeaderBoard player, decimal eloDifferenceForLastGame)
         {
-            var currentRating = player.EloRating;
-            player.EloRating = currentRating + eloDifferenceForLastGame;
+            var (currentRank, currentRating) = (player.Rank, player.EloRating);
+            UpdatePlayer(player, eloDifferenceForLastGame);
 
-            var currentRank = player.Rank;
-            var updatedRank = Players.OrderByDescending(x => x.EloRating).Count(x => x.EloRating > player.EloRating) + 1;
-
-            if (currentRank == updatedRank)
+            if (currentRank == player.Rank)
                 return;
-
-            player.Rank = updatedRank;
-
-            AddDomainEvent(new PlayerDescendedOnLeaderBoard(new PlayerId(player.PlayerId), currentRank, updatedRank));
+            
+            AddDomainEvent(new PlayerDescendedOnLeaderBoard(player.GetPlayerId(), currentRank, player.Rank));
 
             foreach (var playerToAscend in Players.Where(x => x.EloRating > player.EloRating && x.EloRating < currentRating))
             {
-                AddDomainEvent(new PlayerAscendedOnLeaderBoard(new PlayerId(playerToAscend.PlayerId), playerToAscend.Rank, --playerToAscend.Rank));
+                AddDomainEvent(new PlayerAscendedOnLeaderBoard(playerToAscend.GetPlayerId(), playerToAscend.Rank, --playerToAscend.Rank));
             }
+        }
+
+        private void UpdatePlayer(PlayerOnLeaderBoard player, decimal eloDifferenceForLastGame)
+        {
+            player.EloRating += eloDifferenceForLastGame;
+            player.Rank = Players.OrderByDescending(x => x.EloRating).Count(x => x.EloRating > player.EloRating) + 1;
         }
 
         private void EnsureThatLeaderBoardIsInSequentialOrder()
