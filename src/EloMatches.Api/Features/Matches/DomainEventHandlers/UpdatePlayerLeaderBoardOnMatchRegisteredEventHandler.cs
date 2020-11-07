@@ -34,7 +34,7 @@ namespace EloMatches.Api.Features.Matches.DomainEventHandlers
             return leaderBoard.DomainEvents;
         }
 
-        private static void ReactToEvent(PlayerLeaderBoard leaderBoard, PlayerMatchInformation player)
+        private static void ReactToEvent(PlayerLeaderBoard leaderBoard, PlayerMatchResult player)
         {
             var playerId = new PlayerId(player.PlayerId);
 

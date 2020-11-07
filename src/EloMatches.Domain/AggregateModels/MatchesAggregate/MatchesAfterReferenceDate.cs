@@ -35,14 +35,14 @@ namespace EloMatches.Domain.AggregateModels.MatchesAggregate
 
             var eloCalculation = new EloCalculationDifference(Winner.EloRating, Loser.EloRating);
 
-            var winnerPlayerMatchInformation = PlayerMatchInformation.Win(Winner, eloCalculation);
-            var loserPlayerMatchInformation = PlayerMatchInformation.Loss(Loser, eloCalculation);
+            var winnerResult = PlayerMatchResult.Win(Winner, eloCalculation);
+            var loserResult = PlayerMatchResult.Loss(Loser, eloCalculation);
 
-            RegisteredMatch = new Match(matchResult, winnerPlayerMatchInformation, loserPlayerMatchInformation, matchDate);
+            RegisteredMatch = new Match(matchResult, winnerResult, loserResult, matchDate);
             
             //todo -> RecalculateMatches if there are any.
 
-            AddDomainEvent(new MatchRegistered(matchDate, matchResult, eloCalculation, winnerPlayerMatchInformation, loserPlayerMatchInformation));
+            AddDomainEvent(new MatchRegistered(matchDate, matchResult, eloCalculation, winnerResult, loserResult));
         }
     }
 }

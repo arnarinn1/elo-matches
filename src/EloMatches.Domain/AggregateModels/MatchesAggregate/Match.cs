@@ -5,7 +5,7 @@ namespace EloMatches.Domain.AggregateModels.MatchesAggregate
 {
     public class Match
     {
-        public Match(MatchResult matchResult, PlayerMatchInformation winner, PlayerMatchInformation loser, MatchDate matchDate)
+        public Match(MatchResult matchResult, PlayerMatchResult winner, PlayerMatchResult loser, MatchDate matchDate)
         {
             MatchResult = matchResult ?? throw new ArgumentNullException(nameof(matchResult));
             Winner = winner ?? throw new ArgumentNullException(nameof(winner));
@@ -17,8 +17,8 @@ namespace EloMatches.Domain.AggregateModels.MatchesAggregate
         public int Id { get; private set; }
 
         public MatchResult MatchResult { get; private set; }
-        public PlayerMatchInformation Winner { get; private set; }
-        public PlayerMatchInformation Loser { get; private set; }
+        public PlayerMatchResult Winner { get; private set; }
+        public PlayerMatchResult Loser { get; private set; }
         public MatchDate MatchDate { get; private set; }
         public DateTime EntryDate { get; private set; }
 
