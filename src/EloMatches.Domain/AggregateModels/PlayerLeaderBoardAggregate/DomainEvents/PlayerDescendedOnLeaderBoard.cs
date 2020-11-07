@@ -5,14 +5,16 @@ namespace EloMatches.Domain.AggregateModels.PlayerLeaderBoardAggregate.DomainEve
 {
     public class PlayerDescendedOnLeaderBoard : DomainEvent
     {
-        public PlayerDescendedOnLeaderBoard(PlayerId playerId, int previousRank, int currentRank) : base(playerId.ToString(), "PlayerLeaderBoard")
+        public PlayerDescendedOnLeaderBoard(PlayerId playerId, PlayerId ascendingPlayerId, int previousRank, int currentRank) : base(playerId.ToString(), "PlayerLeaderBoard")
         {
             PlayerId = playerId;
+            AscendingPlayerId = ascendingPlayerId;
             PreviousRank = previousRank;
             CurrentRank = currentRank;
         }
 
         public PlayerId PlayerId { get; }
+        public PlayerId AscendingPlayerId { get; }
         public int PreviousRank { get; }
         public int CurrentRank { get; }
     }

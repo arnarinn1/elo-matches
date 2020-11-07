@@ -54,9 +54,9 @@ namespace EloMatches.Tests.Unit.Domain.AggregateModels.PlayerRankingAggregate
 
             leaderBoard.DomainEvents.Should().HaveCount(4);
             leaderBoard.VerifyPlayerAddedToLeaderBoard(_player6, 3);
-            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player3, 4,3);
-            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player4, 5, 4);
-            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player5, 6, 5);
+            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player3, 4,3,_player6);
+            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player4, 5, 4, _player6);
+            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player5, 6, 5, _player6);
 
             leaderBoard.Players.Single(x => x.PlayerId == _player1).Rank.Should().Be(1);
             leaderBoard.Players.Single(x => x.PlayerId == _player2).Rank.Should().Be(2);
@@ -84,11 +84,11 @@ namespace EloMatches.Tests.Unit.Domain.AggregateModels.PlayerRankingAggregate
 
             leaderBoard.DomainEvents.Should().HaveCount(6);
             leaderBoard.VerifyPlayerAddedToLeaderBoard(_player6, 1);
-            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player1, 2, 1);
-            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player2, 3, 2);
-            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player3, 4, 3);
-            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player4, 5, 4);
-            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player5, 6, 5);
+            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player1, 2, 1, _player6);
+            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player2, 3, 2, _player6);
+            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player3, 4, 3, _player6);
+            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player4, 5, 4, _player6);
+            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player5, 6, 5, _player6);
 
             leaderBoard.Players.Single(x => x.PlayerId == _player6).Rank.Should().Be(1);
             leaderBoard.Players.Single(x => x.PlayerId == _player1).Rank.Should().Be(2);
@@ -169,9 +169,9 @@ namespace EloMatches.Tests.Unit.Domain.AggregateModels.PlayerRankingAggregate
             leaderBoard.UpdateLeaderBoard(new PlayerId(_player4), 11);
 
             leaderBoard.DomainEvents.Should().HaveCount(3);
-            leaderBoard.VerifyPlayerAscendedOnLeaderBoard(_player4, 2, 4);
-            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player2, 3, 2);
-            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player3, 4, 3);
+            leaderBoard.VerifyPlayerAscendedOnLeaderBoard(_player4, 2, 4, null);
+            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player2, 3, 2, _player4);
+            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player3, 4, 3, _player4);
 
             leaderBoard.Players.Single(x => x.PlayerId == _player1).Rank.Should().Be(1);
             leaderBoard.Players.Single(x => x.PlayerId == _player4).Rank.Should().Be(2);
@@ -196,8 +196,8 @@ namespace EloMatches.Tests.Unit.Domain.AggregateModels.PlayerRankingAggregate
             leaderBoard.UpdateLeaderBoard(new PlayerId(_player4), 6);
 
             leaderBoard.DomainEvents.Should().HaveCount(2);
-            leaderBoard.VerifyPlayerAscendedOnLeaderBoard(_player4, 3, 4);
-            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player3, 4, 3);
+            leaderBoard.VerifyPlayerAscendedOnLeaderBoard(_player4, 3, 4, null);
+            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player3, 4, 3, _player4);
 
             leaderBoard.Players.Single(x => x.PlayerId == _player1).Rank.Should().Be(1);
             leaderBoard.Players.Single(x => x.PlayerId == _player2).Rank.Should().Be(2);
@@ -250,9 +250,9 @@ namespace EloMatches.Tests.Unit.Domain.AggregateModels.PlayerRankingAggregate
             leaderBoard.UpdateLeaderBoard(new PlayerId(_player2), -11);
 
             leaderBoard.DomainEvents.Should().HaveCount(3);
-            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player2, 4,2);
-            leaderBoard.VerifyPlayerAscendedOnLeaderBoard(_player3, 2,3);
-            leaderBoard.VerifyPlayerAscendedOnLeaderBoard(_player4, 3, 4);
+            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player2, 4, 2, null);
+            leaderBoard.VerifyPlayerAscendedOnLeaderBoard(_player3, 2, 3, _player2);
+            leaderBoard.VerifyPlayerAscendedOnLeaderBoard(_player4, 3, 4, _player2);
 
             leaderBoard.Players.Single(x => x.PlayerId == _player1).Rank.Should().Be(1);
             leaderBoard.Players.Single(x => x.PlayerId == _player3).Rank.Should().Be(2);
@@ -277,8 +277,8 @@ namespace EloMatches.Tests.Unit.Domain.AggregateModels.PlayerRankingAggregate
             leaderBoard.UpdateLeaderBoard(new PlayerId(_player2), -6);
 
             leaderBoard.DomainEvents.Should().HaveCount(2);
-            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player2, 3, 2);
-            leaderBoard.VerifyPlayerAscendedOnLeaderBoard(_player3, 2, 3);
+            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player2, 3, 2,null);
+            leaderBoard.VerifyPlayerAscendedOnLeaderBoard(_player3, 2, 3, _player2);
 
             leaderBoard.Players.Single(x => x.PlayerId == _player1).Rank.Should().Be(1);
             leaderBoard.Players.Single(x => x.PlayerId == _player3).Rank.Should().Be(2);
@@ -292,17 +292,19 @@ namespace EloMatches.Tests.Unit.Domain.AggregateModels.PlayerRankingAggregate
 
     internal static class PlayerLeaderBoardTestExtensions
     {
-        internal static void VerifyPlayerAscendedOnLeaderBoard(this PlayerLeaderBoard self, PlayerId playerId, int currentRank, int previousRank)
+        internal static void VerifyPlayerAscendedOnLeaderBoard(this PlayerLeaderBoard self, PlayerId playerId, int currentRank, int previousRank, PlayerId descendingPlayerId)
         {
             var evt = self.DomainEvents.OfType<PlayerAscendedOnLeaderBoard>().Single(x => x.PlayerId == playerId);
             evt.CurrentRank.Should().Be(currentRank);
             evt.PreviousRank.Should().Be(previousRank);
+            evt.DescendingPlayerId.Should().Be(descendingPlayerId);
         }
-        internal static void VerifyPlayerDescendedOnLeaderBoard(this PlayerLeaderBoard self, PlayerId playerId, int currentRank, int previousRank)
+        internal static void VerifyPlayerDescendedOnLeaderBoard(this PlayerLeaderBoard self, PlayerId playerId, int currentRank, int previousRank, PlayerId ascendingPlayerId)
         {
             var evt = self.DomainEvents.OfType<PlayerDescendedOnLeaderBoard>().Single(x => x.PlayerId == playerId);
             evt.CurrentRank.Should().Be(currentRank);
             evt.PreviousRank.Should().Be(previousRank);
+            evt.AscendingPlayerId.Should().Be(ascendingPlayerId);
         }
 
         internal static void VerifyPlayerAddedToLeaderBoard(this PlayerLeaderBoard self, PlayerId playerId, int rank)

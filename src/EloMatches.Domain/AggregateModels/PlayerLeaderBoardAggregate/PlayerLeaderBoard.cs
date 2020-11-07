@@ -29,7 +29,7 @@ namespace EloMatches.Domain.AggregateModels.PlayerLeaderBoardAggregate
 
             foreach (var playerToDescend in Players.Where(x => x.EloRating < eloRating))
             {
-                AddDomainEvent(new PlayerDescendedOnLeaderBoard(new PlayerId(playerToDescend.PlayerId), playerToDescend.Rank, ++playerToDescend.Rank));
+                AddDomainEvent(new PlayerDescendedOnLeaderBoard(new PlayerId(playerToDescend.PlayerId), playerId, playerToDescend.Rank, ++playerToDescend.Rank));
             }
 
             EnsureThatLeaderBoardIsInSequentialOrder();
@@ -55,11 +55,11 @@ namespace EloMatches.Domain.AggregateModels.PlayerLeaderBoardAggregate
             if (currentRank == player.Rank)
                 return;
 
-            AddDomainEvent(new PlayerAscendedOnLeaderBoard(player.GetPlayerId(), currentRank, player.Rank));
+            AddDomainEvent(new PlayerAscendedOnLeaderBoard(player.GetPlayerId(), null, currentRank, player.Rank));
 
             foreach (var playerToDescend in Players.Where(x => x.EloRating < player.EloRating && x.EloRating > currentRating))
             {
-                AddDomainEvent(new PlayerDescendedOnLeaderBoard(playerToDescend.GetPlayerId(), playerToDescend.Rank, ++playerToDescend.Rank));
+                AddDomainEvent(new PlayerDescendedOnLeaderBoard(playerToDescend.GetPlayerId(), player.GetPlayerId(), playerToDescend.Rank, ++playerToDescend.Rank));
             }
         }
 
@@ -71,11 +71,11 @@ namespace EloMatches.Domain.AggregateModels.PlayerLeaderBoardAggregate
             if (currentRank == player.Rank)
                 return;
             
-            AddDomainEvent(new PlayerDescendedOnLeaderBoard(player.GetPlayerId(), currentRank, player.Rank));
+            AddDomainEvent(new PlayerDescendedOnLeaderBoard(player.GetPlayerId(), null, currentRank, player.Rank));
 
             foreach (var playerToAscend in Players.Where(x => x.EloRating > player.EloRating && x.EloRating < currentRating))
             {
-                AddDomainEvent(new PlayerAscendedOnLeaderBoard(playerToAscend.GetPlayerId(), playerToAscend.Rank, --playerToAscend.Rank));
+                AddDomainEvent(new PlayerAscendedOnLeaderBoard(playerToAscend.GetPlayerId(), player.GetPlayerId(), playerToAscend.Rank, --playerToAscend.Rank));
             }
         }
 
