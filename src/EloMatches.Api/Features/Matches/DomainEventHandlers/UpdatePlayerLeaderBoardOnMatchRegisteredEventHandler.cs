@@ -9,8 +9,6 @@ using EloMatches.Domain.AggregateModels.PlayerLeaderBoardAggregate;
 using EloMatches.Domain.SeedWork;
 using EloMatches.Infrastructure.CommandPipeline.AbstractHandlers;
 
-// ReSharper disable SimplifyLinqExpressionUseAll
-
 namespace EloMatches.Api.Features.Matches.DomainEventHandlers
 {
     public class UpdatePlayerLeaderBoardOnMatchRegisteredEventHandler : BaseEventHandler<MatchRegistered>

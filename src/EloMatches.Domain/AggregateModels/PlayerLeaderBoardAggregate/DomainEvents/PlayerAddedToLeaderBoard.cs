@@ -5,13 +5,15 @@ namespace EloMatches.Domain.AggregateModels.PlayerLeaderBoardAggregate.DomainEve
 {
     public class PlayerAddedToLeaderBoard : DomainEvent
     {
-        public PlayerAddedToLeaderBoard(PlayerId playerId, int currentRank) : base(playerId, "PlayerLeaderBoard")
+        public PlayerAddedToLeaderBoard(PlayerId playerId, decimal eloRating, int rank) : base(playerId, "PlayerLeaderBoard")
         {
             PlayerId = playerId;
-            CurrentRank = currentRank;
+            EloRating = eloRating;
+            CurrentRank = rank;
         }
 
         public PlayerId PlayerId { get; }
+        public decimal EloRating { get; }
         public int CurrentRank { get; }
     }
 }
