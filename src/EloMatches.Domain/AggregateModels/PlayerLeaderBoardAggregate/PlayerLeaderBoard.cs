@@ -21,7 +21,7 @@ namespace EloMatches.Domain.AggregateModels.PlayerLeaderBoardAggregate
             if (Players.Any(x => x.PlayerId == playerId))
                 return;
 
-            var rank = Players.OrderByDescending(x => x.EloRating).Count(x => x.EloRating > eloRating) + 1;
+            var rank = Players.OrderByDescending(x => x.EloRating).Count(x => x.EloRating >= eloRating) + 1;
 
             Players.Add(new PlayerOnLeaderBoard(playerId, eloRating, rank));
 

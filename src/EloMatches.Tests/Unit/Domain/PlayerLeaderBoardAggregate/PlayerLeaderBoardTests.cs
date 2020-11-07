@@ -23,11 +23,23 @@ namespace EloMatches.Tests.Unit.Domain.PlayerLeaderBoardAggregate
         #region AddPlayerToLeaderBoard
 
         [Test]
-        public void AddPlayerToLeaderBoard_ShouldMovePlayerToFirstPlace_WhenNoPlayerIsInTheLeaderBoard()
+        public void AddPlayerToLeaderBoard_ShouldMovePlayersToCorrectRanks_WhenPlayerBoardIsEmptyAndTheyHaveDifferentScores()
         {
             var leaderBoard = PlayerLeaderBoardReflectionFactory.Create(new List<PlayerOnLeaderBoard>());
             leaderBoard.AddPlayerToLeaderBoard(_player1, 1000);
             leaderBoard.AddPlayerToLeaderBoard(_player2, 990);
+
+            leaderBoard.DomainEvents.Should().HaveCount(2);
+            leaderBoard.VerifyPlayerAddedToLeaderBoard(_player1, 1);
+            leaderBoard.VerifyPlayerAddedToLeaderBoard(_player2, 2);
+        }
+
+        [Test]
+        public void AddPlayerToLeaderBoard_ShouldMovePlayersToCorrectRanks_WhenPlayerBoardIsEmptyAndTheyHaveTheSameScore()
+        {
+            var leaderBoard = PlayerLeaderBoardReflectionFactory.Create(new List<PlayerOnLeaderBoard>());
+            leaderBoard.AddPlayerToLeaderBoard(_player1, 1000);
+            leaderBoard.AddPlayerToLeaderBoard(_player2, 1000);
 
             leaderBoard.DomainEvents.Should().HaveCount(2);
             leaderBoard.VerifyPlayerAddedToLeaderBoard(_player1, 1);
@@ -120,6 +132,37 @@ namespace EloMatches.Tests.Unit.Domain.PlayerLeaderBoardAggregate
             players.Single(x => x.PlayerId == _player4).Rank.Should().Be(4);
             players.Single(x => x.PlayerId == _player5).Rank.Should().Be(5);
             players.Single(x => x.PlayerId == _player6).Rank.Should().Be(6);
+        }
+
+        [Test]
+        public void AddPlayerToLeaderBoard_ShouldMovePlayerToSecondPlace_WhenHisEloRatingIsEvenToTheTopRating()
+        {
+            var players = new List<PlayerOnLeaderBoard>
+            {
+                new PlayerOnLeaderBoard(_player1, 100, 1),
+                new PlayerOnLeaderBoard(_player2, 95, 2),
+                new PlayerOnLeaderBoard(_player3, 90, 3),
+                new PlayerOnLeaderBoard(_player4, 85, 4),
+                new PlayerOnLeaderBoard(_player5, 80, 5)
+            };
+
+            var leaderBoard = PlayerLeaderBoardReflectionFactory.Create(players);
+
+            leaderBoard.AddPlayerToLeaderBoard(new PlayerId(_player6), 100);
+
+            leaderBoard.DomainEvents.Should().HaveCount(5);
+            leaderBoard.VerifyPlayerAddedToLeaderBoard(_player6, 2);
+            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player2, 3, 2, _player6);
+            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player3, 4,3, _player6);
+            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player4, 5, 4, _player6);
+            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player5, 6,5, _player6);
+
+            players.Single(x => x.PlayerId == _player1).Rank.Should().Be(1);
+            players.Single(x => x.PlayerId == _player6).Rank.Should().Be(2);
+            players.Single(x => x.PlayerId == _player2).Rank.Should().Be(3);
+            players.Single(x => x.PlayerId == _player3).Rank.Should().Be(4);
+            players.Single(x => x.PlayerId == _player4).Rank.Should().Be(5);
+            players.Single(x => x.PlayerId == _player5).Rank.Should().Be(6);
         }
 
         #endregion
