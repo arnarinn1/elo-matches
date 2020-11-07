@@ -13,7 +13,7 @@ namespace EloMatches.Query.Persistence.EntityConfigurations
             builder.Property(x => x.EloRatingGainedForWinner).HasPrecision(10, 6);
             builder.Property(x => x.TotalEloRatingBeforeGameForWinner).HasPrecision(10, 6);
             builder.Property(x => x.TotalEloRatingAfterGameForWinner).HasPrecision(10, 6);
-            builder.Property(x => x.WinChanceBasedOnEloRatingForWinner).HasPrecision(10, 6);
+            builder.Property(x => x.WinChanceBasedOnEloRatingForWinner).HasPrecision(5, 4);
 
             builder.Property(x => x.EloRatingLostForLoser).HasPrecision(10, 6);
             builder.Property(x => x.TotalEloRatingBeforeGameForLoser).HasPrecision(10, 6);
