@@ -9,9 +9,9 @@ namespace EloMatches.Domain.AggregateModels.PlayerLeaderBoardAggregate
 {
     public class PlayerLeaderBoard : Aggregate, IAggregateRoot
     {
-        public ICollection<PlayerOnLeaderBoard> Players { get; set; }
+        private ICollection<PlayerOnLeaderBoard> Players { get; set; }
 
-        public PlayerLeaderBoard(ICollection<PlayerOnLeaderBoard> players)
+        private PlayerLeaderBoard(ICollection<PlayerOnLeaderBoard> players)
         {
             Players = players;
         }

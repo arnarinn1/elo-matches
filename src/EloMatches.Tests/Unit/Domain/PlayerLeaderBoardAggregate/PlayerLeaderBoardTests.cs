@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using EloMatches.Domain.AggregateModels.PlayerAggregate;
 using EloMatches.Domain.AggregateModels.PlayerLeaderBoardAggregate;
 using EloMatches.Domain.AggregateModels.PlayerLeaderBoardAggregate.DomainEvents;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace EloMatches.Tests.Unit.Domain.AggregateModels.PlayerRankingAggregate
+namespace EloMatches.Tests.Unit.Domain.PlayerLeaderBoardAggregate
 {
     [TestFixture, Category("Unit")]
     public class PlayerLeaderBoardTests
@@ -24,16 +25,13 @@ namespace EloMatches.Tests.Unit.Domain.AggregateModels.PlayerRankingAggregate
         [Test]
         public void AddPlayerToLeaderBoard_ShouldMovePlayerToFirstPlace_WhenNoPlayerIsInTheLeaderBoard()
         {
-            var leaderBoard = new PlayerLeaderBoard(new List<PlayerOnLeaderBoard>());
+            var leaderBoard = PlayerLeaderBoardReflectionFactory.Create(new List<PlayerOnLeaderBoard>());
             leaderBoard.AddPlayerToLeaderBoard(_player1, 1000);
             leaderBoard.AddPlayerToLeaderBoard(_player2, 990);
 
             leaderBoard.DomainEvents.Should().HaveCount(2);
             leaderBoard.VerifyPlayerAddedToLeaderBoard(_player1, 1);
             leaderBoard.VerifyPlayerAddedToLeaderBoard(_player2, 2);
-
-            leaderBoard.Players.Single(x => x.PlayerId == _player1).Rank.Should().Be(1);
-            leaderBoard.Players.Single(x => x.PlayerId == _player2).Rank.Should().Be(2);
         }
 
         [Test]
@@ -48,22 +46,21 @@ namespace EloMatches.Tests.Unit.Domain.AggregateModels.PlayerRankingAggregate
                 new PlayerOnLeaderBoard(_player5, 80, 5)
             };
 
-            var leaderBoard = new PlayerLeaderBoard(players);
-
+            var leaderBoard = PlayerLeaderBoardReflectionFactory.Create(players);
             leaderBoard.AddPlayerToLeaderBoard(new PlayerId(_player6), 91);
 
             leaderBoard.DomainEvents.Should().HaveCount(4);
             leaderBoard.VerifyPlayerAddedToLeaderBoard(_player6, 3);
-            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player3, 4,3,_player6);
+            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player3, 4, 3, _player6);
             leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player4, 5, 4, _player6);
             leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player5, 6, 5, _player6);
 
-            leaderBoard.Players.Single(x => x.PlayerId == _player1).Rank.Should().Be(1);
-            leaderBoard.Players.Single(x => x.PlayerId == _player2).Rank.Should().Be(2);
-            leaderBoard.Players.Single(x => x.PlayerId == _player6).Rank.Should().Be(3);
-            leaderBoard.Players.Single(x => x.PlayerId == _player3).Rank.Should().Be(4);
-            leaderBoard.Players.Single(x => x.PlayerId == _player4).Rank.Should().Be(5);
-            leaderBoard.Players.Single(x => x.PlayerId == _player5).Rank.Should().Be(6);
+            players.Single(x => x.PlayerId == _player1).Rank.Should().Be(1);
+            players.Single(x => x.PlayerId == _player2).Rank.Should().Be(2);
+            players.Single(x => x.PlayerId == _player6).Rank.Should().Be(3);
+            players.Single(x => x.PlayerId == _player3).Rank.Should().Be(4);
+            players.Single(x => x.PlayerId == _player4).Rank.Should().Be(5);
+            players.Single(x => x.PlayerId == _player5).Rank.Should().Be(6);
         }
 
         [Test]
@@ -78,7 +75,7 @@ namespace EloMatches.Tests.Unit.Domain.AggregateModels.PlayerRankingAggregate
                 new PlayerOnLeaderBoard(_player5, 80, 5)
             };
 
-            var leaderBoard = new PlayerLeaderBoard(players);
+            var leaderBoard = PlayerLeaderBoardReflectionFactory.Create(players);
 
             leaderBoard.AddPlayerToLeaderBoard(new PlayerId(_player6), 101);
 
@@ -90,12 +87,12 @@ namespace EloMatches.Tests.Unit.Domain.AggregateModels.PlayerRankingAggregate
             leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player4, 5, 4, _player6);
             leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player5, 6, 5, _player6);
 
-            leaderBoard.Players.Single(x => x.PlayerId == _player6).Rank.Should().Be(1);
-            leaderBoard.Players.Single(x => x.PlayerId == _player1).Rank.Should().Be(2);
-            leaderBoard.Players.Single(x => x.PlayerId == _player2).Rank.Should().Be(3);
-            leaderBoard.Players.Single(x => x.PlayerId == _player3).Rank.Should().Be(4);
-            leaderBoard.Players.Single(x => x.PlayerId == _player4).Rank.Should().Be(5);
-            leaderBoard.Players.Single(x => x.PlayerId == _player5).Rank.Should().Be(6);
+            players.Single(x => x.PlayerId == _player6).Rank.Should().Be(1);
+            players.Single(x => x.PlayerId == _player1).Rank.Should().Be(2);
+            players.Single(x => x.PlayerId == _player2).Rank.Should().Be(3);
+            players.Single(x => x.PlayerId == _player3).Rank.Should().Be(4);
+            players.Single(x => x.PlayerId == _player4).Rank.Should().Be(5);
+            players.Single(x => x.PlayerId == _player5).Rank.Should().Be(6);
         }
 
         [Test]
@@ -110,19 +107,19 @@ namespace EloMatches.Tests.Unit.Domain.AggregateModels.PlayerRankingAggregate
                 new PlayerOnLeaderBoard(_player5, 80, 5)
             };
 
-            var leaderBoard = new PlayerLeaderBoard(players);
+            var leaderBoard = PlayerLeaderBoardReflectionFactory.Create(players);
 
             leaderBoard.AddPlayerToLeaderBoard(new PlayerId(_player6), 50);
 
             leaderBoard.DomainEvents.Should().HaveCount(1);
             leaderBoard.VerifyPlayerAddedToLeaderBoard(_player6, 6);
 
-            leaderBoard.Players.Single(x => x.PlayerId == _player1).Rank.Should().Be(1);
-            leaderBoard.Players.Single(x => x.PlayerId == _player2).Rank.Should().Be(2);
-            leaderBoard.Players.Single(x => x.PlayerId == _player3).Rank.Should().Be(3);
-            leaderBoard.Players.Single(x => x.PlayerId == _player4).Rank.Should().Be(4);
-            leaderBoard.Players.Single(x => x.PlayerId == _player5).Rank.Should().Be(5);
-            leaderBoard.Players.Single(x => x.PlayerId == _player6).Rank.Should().Be(6);
+            players.Single(x => x.PlayerId == _player1).Rank.Should().Be(1);
+            players.Single(x => x.PlayerId == _player2).Rank.Should().Be(2);
+            players.Single(x => x.PlayerId == _player3).Rank.Should().Be(3);
+            players.Single(x => x.PlayerId == _player4).Rank.Should().Be(4);
+            players.Single(x => x.PlayerId == _player5).Rank.Should().Be(5);
+            players.Single(x => x.PlayerId == _player6).Rank.Should().Be(6);
         }
 
         #endregion
@@ -141,16 +138,16 @@ namespace EloMatches.Tests.Unit.Domain.AggregateModels.PlayerRankingAggregate
                 new PlayerOnLeaderBoard(_player5, 80, 5)
             };
 
-            var leaderBoard = new PlayerLeaderBoard(players);
+            var leaderBoard = PlayerLeaderBoardReflectionFactory.Create(players);
             leaderBoard.UpdateLeaderBoard(new PlayerId(_player2), 1);
 
             leaderBoard.DomainEvents.Should().HaveCount(0);
 
-            leaderBoard.Players.Single(x => x.PlayerId == _player1).Rank.Should().Be(1);
-            leaderBoard.Players.Single(x => x.PlayerId == _player2).Rank.Should().Be(2);
-            leaderBoard.Players.Single(x => x.PlayerId == _player3).Rank.Should().Be(3);
-            leaderBoard.Players.Single(x => x.PlayerId == _player4).Rank.Should().Be(4);
-            leaderBoard.Players.Single(x => x.PlayerId == _player5).Rank.Should().Be(5);
+            players.Single(x => x.PlayerId == _player1).Rank.Should().Be(1);
+            players.Single(x => x.PlayerId == _player2).Rank.Should().Be(2);
+            players.Single(x => x.PlayerId == _player3).Rank.Should().Be(3);
+            players.Single(x => x.PlayerId == _player4).Rank.Should().Be(4);
+            players.Single(x => x.PlayerId == _player5).Rank.Should().Be(5);
         }
 
         [Test]
@@ -165,7 +162,7 @@ namespace EloMatches.Tests.Unit.Domain.AggregateModels.PlayerRankingAggregate
                 new PlayerOnLeaderBoard(_player5, 80, 5)
             };
 
-            var leaderBoard = new PlayerLeaderBoard(players);
+            var leaderBoard = PlayerLeaderBoardReflectionFactory.Create(players);
             leaderBoard.UpdateLeaderBoard(new PlayerId(_player4), 11);
 
             leaderBoard.DomainEvents.Should().HaveCount(3);
@@ -173,11 +170,11 @@ namespace EloMatches.Tests.Unit.Domain.AggregateModels.PlayerRankingAggregate
             leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player2, 3, 2, _player4);
             leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player3, 4, 3, _player4);
 
-            leaderBoard.Players.Single(x => x.PlayerId == _player1).Rank.Should().Be(1);
-            leaderBoard.Players.Single(x => x.PlayerId == _player4).Rank.Should().Be(2);
-            leaderBoard.Players.Single(x => x.PlayerId == _player2).Rank.Should().Be(3);
-            leaderBoard.Players.Single(x => x.PlayerId == _player3).Rank.Should().Be(4);
-            leaderBoard.Players.Single(x => x.PlayerId == _player5).Rank.Should().Be(5);
+            players.Single(x => x.PlayerId == _player1).Rank.Should().Be(1);
+            players.Single(x => x.PlayerId == _player4).Rank.Should().Be(2);
+            players.Single(x => x.PlayerId == _player2).Rank.Should().Be(3);
+            players.Single(x => x.PlayerId == _player3).Rank.Should().Be(4);
+            players.Single(x => x.PlayerId == _player5).Rank.Should().Be(5);
         }
 
         [Test]
@@ -192,18 +189,18 @@ namespace EloMatches.Tests.Unit.Domain.AggregateModels.PlayerRankingAggregate
                 new PlayerOnLeaderBoard(_player5, 80, 5)
             };
 
-            var leaderBoard = new PlayerLeaderBoard(players);
+            var leaderBoard = PlayerLeaderBoardReflectionFactory.Create(players);
             leaderBoard.UpdateLeaderBoard(new PlayerId(_player4), 6);
 
             leaderBoard.DomainEvents.Should().HaveCount(2);
             leaderBoard.VerifyPlayerAscendedOnLeaderBoard(_player4, 3, 4, null);
             leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player3, 4, 3, _player4);
 
-            leaderBoard.Players.Single(x => x.PlayerId == _player1).Rank.Should().Be(1);
-            leaderBoard.Players.Single(x => x.PlayerId == _player2).Rank.Should().Be(2);
-            leaderBoard.Players.Single(x => x.PlayerId == _player4).Rank.Should().Be(3);
-            leaderBoard.Players.Single(x => x.PlayerId == _player3).Rank.Should().Be(4);
-            leaderBoard.Players.Single(x => x.PlayerId == _player5).Rank.Should().Be(5);
+            players.Single(x => x.PlayerId == _player1).Rank.Should().Be(1);
+            players.Single(x => x.PlayerId == _player2).Rank.Should().Be(2);
+            players.Single(x => x.PlayerId == _player4).Rank.Should().Be(3);
+            players.Single(x => x.PlayerId == _player3).Rank.Should().Be(4);
+            players.Single(x => x.PlayerId == _player5).Rank.Should().Be(5);
         }
 
         #endregion
@@ -222,16 +219,16 @@ namespace EloMatches.Tests.Unit.Domain.AggregateModels.PlayerRankingAggregate
                 new PlayerOnLeaderBoard(_player5, 80, 5)
             };
 
-            var leaderBoard = new PlayerLeaderBoard(players);
+            var leaderBoard = PlayerLeaderBoardReflectionFactory.Create(players);
             leaderBoard.UpdateLeaderBoard(new PlayerId(_player2), -1);
-            
+
             leaderBoard.DomainEvents.Should().HaveCount(0);
 
-            leaderBoard.Players.Single(x => x.PlayerId == _player1).Rank.Should().Be(1);
-            leaderBoard.Players.Single(x => x.PlayerId == _player2).Rank.Should().Be(2);
-            leaderBoard.Players.Single(x => x.PlayerId == _player3).Rank.Should().Be(3);
-            leaderBoard.Players.Single(x => x.PlayerId == _player4).Rank.Should().Be(4);
-            leaderBoard.Players.Single(x => x.PlayerId == _player5).Rank.Should().Be(5);
+            players.Single(x => x.PlayerId == _player1).Rank.Should().Be(1);
+            players.Single(x => x.PlayerId == _player2).Rank.Should().Be(2);
+            players.Single(x => x.PlayerId == _player3).Rank.Should().Be(3);
+            players.Single(x => x.PlayerId == _player4).Rank.Should().Be(4);
+            players.Single(x => x.PlayerId == _player5).Rank.Should().Be(5);
         }
 
         [Test]
@@ -246,7 +243,7 @@ namespace EloMatches.Tests.Unit.Domain.AggregateModels.PlayerRankingAggregate
                 new PlayerOnLeaderBoard(_player5, 80, 5)
             };
 
-            var leaderBoard = new PlayerLeaderBoard(players);
+            var leaderBoard = PlayerLeaderBoardReflectionFactory.Create(players);
             leaderBoard.UpdateLeaderBoard(new PlayerId(_player2), -11);
 
             leaderBoard.DomainEvents.Should().HaveCount(3);
@@ -254,11 +251,11 @@ namespace EloMatches.Tests.Unit.Domain.AggregateModels.PlayerRankingAggregate
             leaderBoard.VerifyPlayerAscendedOnLeaderBoard(_player3, 2, 3, _player2);
             leaderBoard.VerifyPlayerAscendedOnLeaderBoard(_player4, 3, 4, _player2);
 
-            leaderBoard.Players.Single(x => x.PlayerId == _player1).Rank.Should().Be(1);
-            leaderBoard.Players.Single(x => x.PlayerId == _player3).Rank.Should().Be(2);
-            leaderBoard.Players.Single(x => x.PlayerId == _player4).Rank.Should().Be(3);
-            leaderBoard.Players.Single(x => x.PlayerId == _player2).Rank.Should().Be(4);
-            leaderBoard.Players.Single(x => x.PlayerId == _player5).Rank.Should().Be(5);
+            players.Single(x => x.PlayerId == _player1).Rank.Should().Be(1);
+            players.Single(x => x.PlayerId == _player3).Rank.Should().Be(2);
+            players.Single(x => x.PlayerId == _player4).Rank.Should().Be(3);
+            players.Single(x => x.PlayerId == _player2).Rank.Should().Be(4);
+            players.Single(x => x.PlayerId == _player5).Rank.Should().Be(5);
         }
 
         [Test]
@@ -273,21 +270,38 @@ namespace EloMatches.Tests.Unit.Domain.AggregateModels.PlayerRankingAggregate
                 new PlayerOnLeaderBoard(_player5, 80, 5)
             };
 
-            var leaderBoard = new PlayerLeaderBoard(players);
+            var leaderBoard = PlayerLeaderBoardReflectionFactory.Create(players);
             leaderBoard.UpdateLeaderBoard(new PlayerId(_player2), -6);
 
             leaderBoard.DomainEvents.Should().HaveCount(2);
-            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player2, 3, 2,null);
+            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player2, 3, 2, null);
             leaderBoard.VerifyPlayerAscendedOnLeaderBoard(_player3, 2, 3, _player2);
 
-            leaderBoard.Players.Single(x => x.PlayerId == _player1).Rank.Should().Be(1);
-            leaderBoard.Players.Single(x => x.PlayerId == _player3).Rank.Should().Be(2);
-            leaderBoard.Players.Single(x => x.PlayerId == _player2).Rank.Should().Be(3);
-            leaderBoard.Players.Single(x => x.PlayerId == _player4).Rank.Should().Be(4);
-            leaderBoard.Players.Single(x => x.PlayerId == _player5).Rank.Should().Be(5);
+            players.Single(x => x.PlayerId == _player1).Rank.Should().Be(1);
+            players.Single(x => x.PlayerId == _player3).Rank.Should().Be(2);
+            players.Single(x => x.PlayerId == _player2).Rank.Should().Be(3);
+            players.Single(x => x.PlayerId == _player4).Rank.Should().Be(4);
+            players.Single(x => x.PlayerId == _player5).Rank.Should().Be(5);
         }
 
         #endregion
+
+        private static class PlayerLeaderBoardReflectionFactory
+        {
+            private static Func<ICollection<PlayerOnLeaderBoard>, PlayerLeaderBoard> CreateInstanceFactory { get; }
+
+            static PlayerLeaderBoardReflectionFactory()
+            {
+                var constructor = typeof(PlayerLeaderBoard).GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic).Single();
+
+                CreateInstanceFactory = players =>
+                {
+                    return (PlayerLeaderBoard)constructor.Invoke(new object[] { players });
+                };
+            }
+
+            internal static PlayerLeaderBoard Create(ICollection<PlayerOnLeaderBoard> players) => CreateInstanceFactory(players);
+        }
     }
 
     internal static class PlayerLeaderBoardTestExtensions
