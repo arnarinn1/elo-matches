@@ -17,6 +17,7 @@ namespace EloMatches.Infrastructure.Persistence
             modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
         }
 
+        public Guid? TransactionId => _currentTransaction?.TransactionId;
         public bool HasActiveTransaction => _currentTransaction != null;
 
         public async Task<IDbContextTransaction> BeginTransactionAsync()

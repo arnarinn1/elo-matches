@@ -19,7 +19,7 @@ namespace EloMatches.Api.Infrastructure.DomainEventProcessors
 
         public async Task Process(IReadOnlyCollection<IDomainEvent> domainEvents)
         {
-            await _context.AddRangeAsync(domainEvents.Select(domainEvent => new DomainEventOccurrenceEntity(domainEvent)));
+            await _context.AddRangeAsync(domainEvents.Select(domainEvent => new DomainEventOccurrenceEntity(domainEvent, _context.TransactionId)));
         }
     }
 }

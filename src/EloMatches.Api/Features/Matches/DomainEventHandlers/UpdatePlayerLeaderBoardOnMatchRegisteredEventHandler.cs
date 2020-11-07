@@ -39,7 +39,7 @@ namespace EloMatches.Api.Features.Matches.DomainEventHandlers
             if (player.GameNumber == 1)
                 leaderBoard.AddPlayerToLeaderBoard(playerId, player.TotalEloRatingAfterGame);
             else
-                leaderBoard.UpdateLeaderBoard(playerId, player.TotalEloRatingAfterGame);
+                leaderBoard.UpdateLeaderBoard(playerId, player.EloRatingGameDifference);
         }
     }
 }

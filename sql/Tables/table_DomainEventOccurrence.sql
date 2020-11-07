@@ -8,6 +8,7 @@ CREATE TABLE DomainEventOccurrence
 , TypeName                VARCHAR(128)      NOT NULL
 , SerializedData          VARCHAR(1024)     NOT NULL
 , OccurrenceDate          DATETIME          NOT NULL
+, TransactionId           UNIQUEIDENTIFIER      NULL
 )
 GO
 
@@ -15,5 +16,5 @@ ALTER TABLE DomainEventOccurrence
 ADD CONSTRAINT PK_DomainEvent PRIMARY KEY CLUSTERED (Id);
 GO
 
-CREATE NONCLUSTERED INDEX Idx_DomainEvent_AggregateId ON DomainEventOccurrence (AggregateId)
+CREATE NONCLUSTERED INDEX Idx_DomainEvent_AggregateId ON DomainEventOccurrence (AggregateId, OccurrenceDate)
 GO
