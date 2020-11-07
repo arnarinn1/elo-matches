@@ -9,6 +9,14 @@ namespace EloMatches.Query.Persistence.EntityConfigurations
         public void Configure(EntityTypeBuilder<PlayerRankingProjection> builder)
         {
             builder.ToTable("vw_PlayerRanking");
+
+            builder.Property(x => x.CurrentEloRating).HasPrecision(10, 6);
+            builder.Property(x => x.AverageEloRating).HasPrecision(10, 6);
+            builder.Property(x => x.LowestEloRating).HasPrecision(10, 6);
+            builder.Property(x => x.HighestEloRating).HasPrecision(10, 6);
+            builder.Property(x => x.EloRatingDifference).HasPrecision(10, 6);
+
+            builder.Property(x => x.WinPercentage).HasPrecision(5, 4);
         }
     }
 }

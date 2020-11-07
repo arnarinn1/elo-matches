@@ -9,6 +9,16 @@ namespace EloMatches.Query.Persistence.EntityConfigurations
         public void Configure(EntityTypeBuilder<MatchProjection> builder)
         {
             builder.ToTable("vw_Match");
+
+            builder.Property(x => x.EloRatingGainedForWinner).HasPrecision(10, 6);
+            builder.Property(x => x.TotalEloRatingBeforeGameForWinner).HasPrecision(10, 6);
+            builder.Property(x => x.TotalEloRatingAfterGameForWinner).HasPrecision(10, 6);
+            builder.Property(x => x.WinChanceBasedOnEloRatingForWinner).HasPrecision(10, 6);
+
+            builder.Property(x => x.EloRatingLostForLoser).HasPrecision(10, 6);
+            builder.Property(x => x.TotalEloRatingBeforeGameForLoser).HasPrecision(10, 6);
+            builder.Property(x => x.TotalEloRatingAfterGameForLoser).HasPrecision(10, 6);
+            builder.Property(x => x.WinChanceBasedOnEloRatingForLoser).HasPrecision(5, 4);
         }
     }
 }
