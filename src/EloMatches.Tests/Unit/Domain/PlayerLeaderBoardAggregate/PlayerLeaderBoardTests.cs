@@ -221,6 +221,56 @@ namespace EloMatches.Tests.Unit.Domain.PlayerLeaderBoardAggregate
         }
 
         [Test]
+        public void UpdateLeaderBoardAscend_ShouldStayInSamePlace_WhenEloDifferencePutsHimInSamePlaceAsThePlayerAbove()
+        {
+            var players = new List<PlayerOnLeaderBoard>
+            {
+                new PlayerOnLeaderBoard(_player1, 100, 1),
+                new PlayerOnLeaderBoard(_player2, 95, 2),
+                new PlayerOnLeaderBoard(_player3, 90, 3),
+                new PlayerOnLeaderBoard(_player4, 85, 4),
+                new PlayerOnLeaderBoard(_player5, 80, 5)
+            };
+
+            var leaderBoard = PlayerLeaderBoardReflectionFactory.Create(players);
+            leaderBoard.UpdateLeaderBoard(new PlayerId(_player4), 5);
+
+            leaderBoard.DomainEvents.Should().HaveCount(0);
+
+            players.Single(x => x.PlayerId == _player1).Rank.Should().Be(1);
+            players.Single(x => x.PlayerId == _player2).Rank.Should().Be(2);
+            players.Single(x => x.PlayerId == _player3).Rank.Should().Be(3);
+            players.Single(x => x.PlayerId == _player4).Rank.Should().Be(4);
+            players.Single(x => x.PlayerId == _player5).Rank.Should().Be(5);
+        }
+
+        [Test]
+        public void UpdateLeaderBoardAscend_ShouldMoveUpOnePlace_WhenEloDifferencePutsHimInSamePlaceAsThePlayerTwoPlacesAbove()
+        {
+            var players = new List<PlayerOnLeaderBoard>
+            {
+                new PlayerOnLeaderBoard(_player1, 100, 1),
+                new PlayerOnLeaderBoard(_player2, 95, 2),
+                new PlayerOnLeaderBoard(_player3, 90, 3),
+                new PlayerOnLeaderBoard(_player4, 85, 4),
+                new PlayerOnLeaderBoard(_player5, 80, 5)
+            };
+
+            var leaderBoard = PlayerLeaderBoardReflectionFactory.Create(players);
+            leaderBoard.UpdateLeaderBoard(new PlayerId(_player4), 10);
+
+            leaderBoard.DomainEvents.Should().HaveCount(2);
+            leaderBoard.VerifyPlayerAscendedOnLeaderBoard(_player4, 3, 4, null);
+            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player3, 4, 3, _player4);
+
+            players.Single(x => x.PlayerId == _player1).Rank.Should().Be(1);
+            players.Single(x => x.PlayerId == _player2).Rank.Should().Be(2);
+            players.Single(x => x.PlayerId == _player4).Rank.Should().Be(3);
+            players.Single(x => x.PlayerId == _player3).Rank.Should().Be(4);
+            players.Single(x => x.PlayerId == _player5).Rank.Should().Be(5);
+        }
+
+        [Test]
         public void UpdateLeaderBoardAscend_ShouldMoveUpOnePlace_WhenEloDifferencePutsPlayerAheadOfOnePlayers()
         {
             var players = new List<PlayerOnLeaderBoard>
@@ -298,6 +348,56 @@ namespace EloMatches.Tests.Unit.Domain.PlayerLeaderBoardAggregate
             players.Single(x => x.PlayerId == _player3).Rank.Should().Be(2);
             players.Single(x => x.PlayerId == _player4).Rank.Should().Be(3);
             players.Single(x => x.PlayerId == _player2).Rank.Should().Be(4);
+            players.Single(x => x.PlayerId == _player5).Rank.Should().Be(5);
+        }
+
+        [Test]
+        public void UpdateLeaderBoardDescend_ShouldMoveDownOnePlace_WhenEloDifferencePutsHimInSamePlaceAsThePlayerBelow()
+        {
+            var players = new List<PlayerOnLeaderBoard>
+            {
+                new PlayerOnLeaderBoard(_player1, 100, 1),
+                new PlayerOnLeaderBoard(_player2, 95, 2),
+                new PlayerOnLeaderBoard(_player3, 90, 3),
+                new PlayerOnLeaderBoard(_player4, 85, 4),
+                new PlayerOnLeaderBoard(_player5, 80, 5)
+            };
+
+            var leaderBoard = PlayerLeaderBoardReflectionFactory.Create(players);
+            leaderBoard.UpdateLeaderBoard(new PlayerId(_player3), -5);
+
+            leaderBoard.DomainEvents.Should().HaveCount(0);
+
+            players.Single(x => x.PlayerId == _player1).Rank.Should().Be(1);
+            players.Single(x => x.PlayerId == _player2).Rank.Should().Be(2);
+            players.Single(x => x.PlayerId == _player3).Rank.Should().Be(3);
+            players.Single(x => x.PlayerId == _player4).Rank.Should().Be(4);
+            players.Single(x => x.PlayerId == _player5).Rank.Should().Be(5);
+        }
+
+        [Test]
+        public void UpdateLeaderBoardDescend_ShouldMoveDownOnePlace_WhenEloDifferencePutsHimInSamePlaceAsThePlayerTwoPlacesAbove()
+        {
+            var players = new List<PlayerOnLeaderBoard>
+            {
+                new PlayerOnLeaderBoard(_player1, 100, 1),
+                new PlayerOnLeaderBoard(_player2, 95, 2),
+                new PlayerOnLeaderBoard(_player3, 90, 3),
+                new PlayerOnLeaderBoard(_player4, 85, 4),
+                new PlayerOnLeaderBoard(_player5, 80, 5)
+            };
+
+            var leaderBoard = PlayerLeaderBoardReflectionFactory.Create(players);
+            leaderBoard.UpdateLeaderBoard(new PlayerId(_player3), -10);
+
+            leaderBoard.DomainEvents.Should().HaveCount(2);
+            leaderBoard.VerifyPlayerDescendedOnLeaderBoard(_player3, 4, 3, null);
+            leaderBoard.VerifyPlayerAscendedOnLeaderBoard(_player4, 3, 4, _player3);
+
+            players.Single(x => x.PlayerId == _player1).Rank.Should().Be(1);
+            players.Single(x => x.PlayerId == _player2).Rank.Should().Be(2);
+            players.Single(x => x.PlayerId == _player4).Rank.Should().Be(3);
+            players.Single(x => x.PlayerId == _player3).Rank.Should().Be(4);
             players.Single(x => x.PlayerId == _player5).Rank.Should().Be(5);
         }
 
