@@ -14,6 +14,7 @@ namespace EloMatches.Infrastructure.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.HasDefaultSchema("elo");
             modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
         }
 
