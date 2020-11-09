@@ -1,7 +1,7 @@
 USE Elo_Matches
 GO
 
-CREATE TABLE Match
+CREATE TABLE elo.Match
 ( Id                                 INT IDENTITY(1,1) NOT NULL
  
 , PlayerIdOfWinner                   UNIQUEIDENTIFIER  NOT NULL
@@ -28,9 +28,9 @@ CREATE TABLE Match
 )
 GO
 
-ALTER TABLE Match
+ALTER TABLE elo.Match
 ADD CONSTRAINT PK_Match PRIMARY KEY CLUSTERED (Id);
 GO
 
-CREATE NONCLUSTERED INDEX Idx_Match_MatchDate ON Match (MatchDate)
+CREATE NONCLUSTERED INDEX Idx_Match_MatchDate ON elo.Match (MatchDate)
 GO

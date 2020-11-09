@@ -8,7 +8,7 @@ namespace EloMatches.Query.Persistence.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<MatchProjection> builder)
         {
-            builder.ToView("vw_Match");
+            builder.ToView("vw_Match", "elo");
 
             builder.Property(x => x.EloRatingGainedForWinner).HasPrecision(10, 6);
             builder.Property(x => x.TotalEloRatingBeforeGameForWinner).HasPrecision(10, 6);

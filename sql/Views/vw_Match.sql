@@ -1,7 +1,7 @@
 USE Elo_Matches
 GO
 
-CREATE OR ALTER View vw_Match
+CREATE OR ALTER View elo.vw_Match
 ( Id
  
 , PlayerIdOfWinner
@@ -62,11 +62,11 @@ SELECT m.Id
      , m.MatchDate
      , m.EntryDate
 
-  FROM Match m
+  FROM elo.Match m
   
-  JOIN Player winner
+  JOIN elo.Player winner
     ON winner.Id = m.PlayerIdOfWinner
 
-  JOIN Player loser
+  JOIN elo.Player loser
     ON loser.Id = m.PlayerIdOfLoser
 GO

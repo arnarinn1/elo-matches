@@ -1,7 +1,7 @@
 USE Elo_Matches
 GO
 
-CREATE OR ALTER View vw_DomainEventOccurrence
+CREATE OR ALTER View elo.vw_DomainEventOccurrence
 ( Id
 , AggregateId
 , AggregateType
@@ -18,5 +18,5 @@ SELECT d.Id
      , d.SerializedData
      , d.OccurrenceDate
      , d.TransactionId
- FROM DomainEventOccurrence d
+ FROM elo.DomainEventOccurrence d
 GO

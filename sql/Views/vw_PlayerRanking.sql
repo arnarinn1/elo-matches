@@ -1,7 +1,7 @@
 USE Elo_Matches
 GO
 
-CREATE OR ALTER View vw_PlayerRanking
+CREATE OR ALTER View elo.vw_PlayerRanking
 ( Id
 , SequenceId
  
@@ -56,9 +56,9 @@ SELECT r.Id
      , CAST(CASE WHEN r.StreakType = 1 THEN 1 ELSE 0 END AS BIT)
      
      , r.LastMatchDate
- FROM PlayerRanking r 
+ FROM elo.PlayerRanking r 
 
- JOIN Player p
+ JOIN elo.Player p
    ON p.Id = r.Id
 
 WHERE p.ActiveSince IS NOT NULL

@@ -1,7 +1,7 @@
 USE Elo_Matches
 GO
 
-CREATE OR ALTER View vw_Player
+CREATE OR ALTER View elo.vw_Player
 ( Id
 , SequenceId
 , UserName
@@ -22,5 +22,5 @@ SELECT Id
 	 , ActiveSince
 	 , DeactivatedSince
      , EntryDate
- FROM Player
+ FROM elo.Player
 GO

@@ -1,7 +1,7 @@
 USE Elo_Matches
 GO
 
-CREATE TABLE DomainEventOccurrence
+CREATE TABLE elo.DomainEventOccurrence
 ( Id                      INT IDENTITY(1,1) NOT NULL
 , AggregateId             VARCHAR(64)       NOT NULL
 , AggregateType           VARCHAR(64)       NOT NULL
@@ -12,9 +12,9 @@ CREATE TABLE DomainEventOccurrence
 )
 GO
 
-ALTER TABLE DomainEventOccurrence
+ALTER TABLE elo.DomainEventOccurrence
 ADD CONSTRAINT PK_DomainEvent PRIMARY KEY CLUSTERED (Id);
 GO
 
-CREATE NONCLUSTERED INDEX Idx_DomainEvent_AggregateId ON DomainEventOccurrence (AggregateId, OccurrenceDate)
+CREATE NONCLUSTERED INDEX Idx_DomainEvent_AggregateId ON elo.DomainEventOccurrence (AggregateId, OccurrenceDate)
 GO

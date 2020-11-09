@@ -8,7 +8,7 @@ namespace EloMatches.Query.Persistence.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<DomainEventOccurrenceProjection> builder)
         {
-            builder.ToView("vw_DomainEventOccurrence");
+            builder.ToView("vw_DomainEventOccurrence", "elo");
         }
     }
 }

@@ -1,7 +1,7 @@
 USE Elo_Matches
 GO
 
-CREATE TABLE Player
+CREATE TABLE elo.Player
 ( Id                      UNIQUEIDENTIFIER  NOT NULL
 , SequenceId              INT IDENTITY(1,1) NOT NULL
 , UserName                VARCHAR(128)      NOT NULL
@@ -13,12 +13,12 @@ CREATE TABLE Player
 )
 GO
 
-ALTER TABLE Player
+ALTER TABLE elo.Player
 ADD CONSTRAINT PK_Player PRIMARY KEY NONCLUSTERED (Id);
 GO
 
-CREATE CLUSTERED INDEX Idx_Clustered_Player_SequenceId ON Player (SequenceId)
+CREATE CLUSTERED INDEX Idx_Clustered_Player_SequenceId ON elo.Player (SequenceId)
 GO
 
-CREATE UNIQUE INDEX Idx_Unique_Player_UserName ON Player (UserName)
+CREATE UNIQUE INDEX Idx_Unique_Player_UserName ON elo.Player (UserName)
 GO

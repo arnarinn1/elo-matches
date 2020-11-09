@@ -1,7 +1,7 @@
 USE Elo_Matches
 GO
 
-CREATE TABLE PlayerLeaderBoard
+CREATE TABLE elo.PlayerLeaderBoard
 ( Id            UNIQUEIDENTIFIER  NOT NULL
 , SequenceId    INT IDENTITY(1,1) NOT NULL
 , EloRating     DECIMAL(10,6)     NOT NULL
@@ -9,9 +9,9 @@ CREATE TABLE PlayerLeaderBoard
 )
 GO
 
-ALTER TABLE PlayerLeaderBoard
+ALTER TABLE elo.PlayerLeaderBoard
 ADD CONSTRAINT PK_PlayerLeaderBoard PRIMARY KEY NONCLUSTERED (Id);
 GO
 
-CREATE CLUSTERED INDEX Idx_PlayerLeaderBoard_SequenceId ON PlayerLeaderBoard (SequenceId)
+CREATE CLUSTERED INDEX Idx_PlayerLeaderBoard_SequenceId ON elo.PlayerLeaderBoard (SequenceId)
 GO

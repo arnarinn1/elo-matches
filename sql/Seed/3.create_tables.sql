@@ -3,7 +3,7 @@ GO
 
 PRINT 'DomainEventOccurrence - Creating table'
 
-CREATE TABLE DomainEventOccurrence
+CREATE TABLE elo.DomainEventOccurrence
 ( Id                      INT IDENTITY(1,1) NOT NULL
 , AggregateId             VARCHAR(64)       NOT NULL
 , AggregateType           VARCHAR(64)       NOT NULL
@@ -14,11 +14,11 @@ CREATE TABLE DomainEventOccurrence
 )
 GO
 
-ALTER TABLE DomainEventOccurrence
+ALTER TABLE elo.DomainEventOccurrence
 ADD CONSTRAINT PK_DomainEvent PRIMARY KEY CLUSTERED (Id);
 GO
 
-CREATE NONCLUSTERED INDEX Idx_DomainEvent_AggregateId ON DomainEventOccurrence (AggregateId, TransactionId)
+CREATE NONCLUSTERED INDEX Idx_DomainEvent_AggregateId ON elo.DomainEventOccurrence (AggregateId, OccurrenceDate)
 GO
 
 PRINT 'DomainEventOccurrence - Table created'
@@ -26,7 +26,7 @@ PRINT 'DomainEventOccurrence - Table created'
 
 PRINT 'Player - Creating table'
 
-CREATE TABLE Player
+CREATE TABLE elo.Player
 ( Id                      UNIQUEIDENTIFIER  NOT NULL
 , SequenceId              INT IDENTITY(1,1) NOT NULL
 , UserName                VARCHAR(128)      NOT NULL
@@ -38,14 +38,14 @@ CREATE TABLE Player
 )
 GO
 
-ALTER TABLE Player
+ALTER TABLE elo.Player
 ADD CONSTRAINT PK_Player PRIMARY KEY NONCLUSTERED (Id);
 GO
 
-CREATE CLUSTERED INDEX Idx_Clustered_Player_SequenceId ON Player (SequenceId)
+CREATE CLUSTERED INDEX Idx_Clustered_Player_SequenceId ON elo.Player (SequenceId)
 GO
 
-CREATE UNIQUE INDEX Idx_Unique_Player_UserName ON Player (UserName)
+CREATE UNIQUE INDEX Idx_Unique_Player_UserName ON elo.Player (UserName)
 GO
 
 PRINT 'Player - Table created'
@@ -53,7 +53,7 @@ PRINT 'Player - Table created'
 
 PRINT 'PlayerRanking - Creating table'
 
-CREATE TABLE PlayerRanking
+CREATE TABLE elo.PlayerRanking
 ( Id                      UNIQUEIDENTIFIER  NOT NULL
 , SequenceId              INT IDENTITY(1,1) NOT NULL
  
@@ -80,11 +80,11 @@ CREATE TABLE PlayerRanking
 )
 GO
 
-ALTER TABLE PlayerRanking
+ALTER TABLE elo.PlayerRanking
 ADD CONSTRAINT PK_PlayerRanking PRIMARY KEY NONCLUSTERED (Id);
 GO
 
-CREATE CLUSTERED INDEX Idx_PlayerRanking_SequenceId ON PlayerRanking (SequenceId)
+CREATE CLUSTERED INDEX Idx_PlayerRanking_SequenceId ON elo.PlayerRanking (SequenceId)
 GO
 
 PRINT 'PlayerRanking - Table created'
@@ -92,7 +92,7 @@ PRINT 'PlayerRanking - Table created'
 
 PRINT 'Match - Creating table'
 
-CREATE TABLE Match
+CREATE TABLE elo.Match
 ( Id                                 INT IDENTITY(1,1) NOT NULL
  
 , PlayerIdOfWinner                   UNIQUEIDENTIFIER  NOT NULL
@@ -119,11 +119,11 @@ CREATE TABLE Match
 )
 GO
 
-ALTER TABLE Match
+ALTER TABLE elo.Match
 ADD CONSTRAINT PK_Match PRIMARY KEY CLUSTERED (Id);
 GO
 
-CREATE NONCLUSTERED INDEX Idx_Match_MatchDate ON Match (MatchDate)
+CREATE NONCLUSTERED INDEX Idx_Match_MatchDate ON elo.Match (MatchDate)
 GO
 
 PRINT 'Match - Table created'
@@ -131,7 +131,7 @@ PRINT 'Match - Table created'
 
 PRINT 'PlayerLeaderBoard - Creating table'
 
-CREATE TABLE PlayerLeaderBoard
+CREATE TABLE elo.PlayerLeaderBoard
 ( Id            UNIQUEIDENTIFIER  NOT NULL
 , SequenceId    INT IDENTITY(1,1) NOT NULL
 , EloRating     DECIMAL(10,6)     NOT NULL
@@ -139,11 +139,11 @@ CREATE TABLE PlayerLeaderBoard
 )
 GO
 
-ALTER TABLE PlayerLeaderBoard
+ALTER TABLE elo.PlayerLeaderBoard
 ADD CONSTRAINT PK_PlayerLeaderBoard PRIMARY KEY NONCLUSTERED (Id);
 GO
 
-CREATE CLUSTERED INDEX Idx_PlayerLeaderBoard_SequenceId ON PlayerLeaderBoard (SequenceId)
+CREATE CLUSTERED INDEX Idx_PlayerLeaderBoard_SequenceId ON elo.PlayerLeaderBoard (SequenceId)
 GO
 
 PRINT 'PlayerLeaderBoard - Table created'

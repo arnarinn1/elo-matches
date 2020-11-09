@@ -1,7 +1,7 @@
 USE Elo_Matches
 GO
 
-CREATE TABLE PlayerRanking
+CREATE TABLE elo.PlayerRanking
 ( Id                      UNIQUEIDENTIFIER  NOT NULL
 , SequenceId              INT IDENTITY(1,1) NOT NULL
  
@@ -28,9 +28,9 @@ CREATE TABLE PlayerRanking
 )
 GO
 
-ALTER TABLE PlayerRanking
+ALTER TABLE elo.PlayerRanking
 ADD CONSTRAINT PK_PlayerRanking PRIMARY KEY NONCLUSTERED (Id);
 GO
 
-CREATE CLUSTERED INDEX Idx_PlayerRanking_SequenceId ON PlayerRanking (SequenceId)
+CREATE CLUSTERED INDEX Idx_PlayerRanking_SequenceId ON elo.PlayerRanking (SequenceId)
 GO
