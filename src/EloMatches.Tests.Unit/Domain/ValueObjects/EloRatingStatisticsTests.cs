@@ -6,7 +6,7 @@ using NUnit.Framework;
 
 // ReSharper disable ConditionIsAlwaysTrueOrFalse
 
-namespace EloMatches.Tests.Unit.ValueObjects
+namespace EloMatches.Tests.Unit.Domain.ValueObjects
 {
     [TestFixture, Category("Unit")]
     public class EloRatingStatisticsTests

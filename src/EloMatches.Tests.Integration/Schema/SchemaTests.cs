@@ -8,7 +8,7 @@ using NUnit.Framework;
 using Serilog;
 using Serilog.Extensions.Logging;
 
-namespace EloMatches.Tests.Schema
+namespace EloMatches.Tests.Integration.Schema
 {
     [TestFixture, Category("Schema")]
     public class SchemaTests

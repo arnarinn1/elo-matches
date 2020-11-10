@@ -8,7 +8,7 @@ using Serilog;
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 
-namespace EloMatches.Tests
+namespace EloMatches.Tests.Integration
 {
     public class ContainerBase
     {
