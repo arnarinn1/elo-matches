@@ -1,9 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using EloMatches.Infrastructure.Persistence;
 using EloMatches.Query.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
 using Serilog;
 using Serilog.Extensions.Logging;
@@ -13,16 +15,31 @@ namespace EloMatches.Tests.Integration.Schema
     [TestFixture, Category("Schema")]
     public class SchemaTests
     {
+        private string[] _connectionStrings;
+
+        [OneTimeSetUp]
+        public void SetUpOnce()
+        {
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettingsTest.json", optional: false, reloadOnChange: false)
+                .Build();
+
+            _connectionStrings = configuration.GetSection("SchemaConnectionStrings").Get<string[]>();
+        }
+
         [Test]
         public async Task CommandSchemaTest()
         {
-            await PerformSchemaTest<EloMatchesCommandContext>("Server=localhost;Database=Elo_Matches;Trusted_Connection=True;MultipleActiveResultSets=true");
+            foreach(var connectionString in _connectionStrings)
+                await PerformSchemaTest<EloMatchesCommandContext>(connectionString);
         }
 
         [Test]
         public async Task QuerySchemaTest()
         {
-            await PerformSchemaTest<EloMatchesQueryContext>("Server=localhost;Database=Elo_Matches;Trusted_Connection=True;MultipleActiveResultSets=true");
+            foreach (var connectionString in _connectionStrings)
+                await PerformSchemaTest<EloMatchesQueryContext>(connectionString);
         }
 
         private async Task PerformSchemaTest<TContext>(string connectionString) where TContext : DbContext

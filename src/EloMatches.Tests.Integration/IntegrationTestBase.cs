@@ -2,19 +2,26 @@
 using System.IO;
 using System.Threading.Tasks;
 using EloMatches.Api.Infrastructure.CompositionRoot.WireUp;
+using EloMatches.Infrastructure.CommandPipeline;
+using EloMatches.Query.Pipeline;
+using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using NUnit.Framework;
+using Respawn;
 using Serilog;
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 
 namespace EloMatches.Tests.Integration
 {
-    public class ContainerBase
+    internal abstract class IntegrationTestBase
     {
         private readonly Container _container;
 
-        public ContainerBase()
+        private readonly string _connectionString;
+
+        protected IntegrationTestBase()
         {
             _container = new Container
             {
@@ -25,6 +32,8 @@ namespace EloMatches.Tests.Integration
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettingsTest.json", optional: false, reloadOnChange: false)
                 .Build();
+
+            _connectionString = configuration["ConnectionString"];
 
             var logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(configuration)
@@ -39,6 +48,20 @@ namespace EloMatches.Tests.Integration
                 .RegisterQueryPipeline(configuration)
                 .RegisterDomainEventProcessors()
                 .RegisterIntegrationEventPipeline();
+        }
+
+        private static readonly Checkpoint Checkpoint = new Checkpoint {SchemasToInclude = new[] {"elo"}, DbAdapter = DbAdapter.SqlServer};
+
+        [SetUp]
+        public virtual void SetUpBeforeEachTest()
+        {
+
+        }
+
+        [TearDown]
+        public virtual async Task RunAfterEachTest()
+        {
+            await Checkpoint.Reset(_connectionString);
         }
 
         protected TInstance GetInstance<TInstance>() where TInstance : class
@@ -59,6 +82,25 @@ namespace EloMatches.Tests.Integration
             await using (AsyncScopedLifestyle.BeginScope(_container))
             {
                 await test(_container.GetInstance<TInstance>());
+            }
+        }
+
+        protected async Task Command(ICommand command)
+        {
+            await using (AsyncScopedLifestyle.BeginScope(_container))
+            {
+                var mediator = _container.GetInstance<IMediator>();
+                await mediator.Send(command);
+            }
+        }
+
+        protected async Task<TResult> Query<TQuery, TResult>(TQuery query)
+            where TQuery : IQuery<TResult>
+        {
+            await using (AsyncScopedLifestyle.BeginScope(_container))
+            {
+                var queryDispatcher = _container.GetInstance<IQueryDispatcher>();
+                return await queryDispatcher.Dispatch<TQuery, TResult>(query);
             }
         }
 
