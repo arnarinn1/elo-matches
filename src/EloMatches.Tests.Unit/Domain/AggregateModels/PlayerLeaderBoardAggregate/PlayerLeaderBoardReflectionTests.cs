@@ -2,7 +2,7 @@
 using EloMatches.Domain.AggregateModels.PlayerLeaderBoardAggregate;
 using NUnit.Framework;
 
-namespace EloMatches.Tests.Unit.Domain.PlayerLeaderBoardAggregate
+namespace EloMatches.Tests.Unit.Domain.AggregateModels.PlayerLeaderBoardAggregate
 {
     [TestFixture, Category("Unit")]
     public class PlayerLeaderBoardReflectionTests
