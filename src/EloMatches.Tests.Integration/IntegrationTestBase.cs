@@ -1,9 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using EloMatches.Api.Features.DomainEventOccurrences.Queries.DomainEventsByPaging;
 using EloMatches.Api.Infrastructure.CompositionRoot.WireUp;
 using EloMatches.Infrastructure.CommandPipeline;
+using EloMatches.Query.Paging;
 using EloMatches.Query.Pipeline;
+using EloMatches.Query.Projections.DomainEventOccurrences;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -101,6 +104,15 @@ namespace EloMatches.Tests.Integration
             {
                 var queryDispatcher = _container.GetInstance<IQueryDispatcher>();
                 return await queryDispatcher.Dispatch<TQuery, TResult>(query);
+            }
+        }
+
+        protected async Task<PagingResult<DomainEventOccurrenceProjection>> QueryDomainEvents(string aggregateId, string aggregateType)
+        {
+            await using (AsyncScopedLifestyle.BeginScope(_container))
+            {
+                var queryDispatcher = _container.GetInstance<IQueryDispatcher>();
+                return await queryDispatcher.Dispatch<DomainEventsByPagingQuery, PagingResult<DomainEventOccurrenceProjection>>(new DomainEventsByPagingQuery(10,0, nameof(DomainEventOccurrenceProjection.Id), OrderByDirection.Asc, aggregateId, aggregateType));
             }
         }
 
