@@ -3,7 +3,7 @@ using EloMatches.Domain.ValueObjects;
 using EloMatches.Query.Projections.Players;
 using FluentAssertions;
 
-namespace EloMatches.Tests.Integration.Features.Players
+namespace EloMatches.Tests.Integration.AssertExtensions
 {
     public static class PlayerAssertExtensionMethods
     {

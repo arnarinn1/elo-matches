@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using EloMatches.Api.Features.DomainEventOccurrences.Queries.DomainEventsByPaging;
@@ -107,7 +108,7 @@ namespace EloMatches.Tests.Integration
             }
         }
 
-        protected async Task<PagingResult<DomainEventOccurrenceProjection>> QueryDomainEvents(string aggregateId, string aggregateType)
+        protected async Task<PagingResult<DomainEventOccurrenceProjection>> QueryDomainEvents(string? aggregateId, string? aggregateType)
         {
             await using (AsyncScopedLifestyle.BeginScope(_container))
             {

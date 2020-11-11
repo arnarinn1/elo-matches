@@ -4,7 +4,7 @@ using EloMatches.Query.Paging;
 using EloMatches.Query.Projections.DomainEventOccurrences;
 using FluentAssertions;
 
-namespace EloMatches.Tests.Integration.Features
+namespace EloMatches.Tests.Integration.AssertExtensions
 {
     internal static class DomainEventOccurrenceAssertExtensionMethods
     {

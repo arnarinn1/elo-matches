@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using EloMatches.Api.Features.PlayerRankings.Queries.PlayerRankingById;
 using EloMatches.Api.Features.Players.Commands.Activations;
 using EloMatches.Api.Features.Players.Commands.ChangeEmail;
 using EloMatches.Api.Features.Players.Commands.ChangePlayerNames;
@@ -7,8 +8,11 @@ using EloMatches.Api.Features.Players.Commands.CreatePlayer;
 using EloMatches.Api.Features.Players.Queries.PlayerById;
 using EloMatches.Domain.AggregateModels.PlayerAggregate;
 using EloMatches.Domain.AggregateModels.PlayerAggregate.DomainEvents;
+using EloMatches.Domain.AggregateModels.PlayerRankingAggregate.DomainEvents;
 using EloMatches.Domain.ValueObjects;
+using EloMatches.Query.Projections.PlayerRankings;
 using EloMatches.Query.Projections.Players;
+using EloMatches.Tests.Integration.AssertExtensions;
 using NUnit.Framework;
 
 namespace EloMatches.Tests.Integration.Features.Players
@@ -16,7 +20,6 @@ namespace EloMatches.Tests.Integration.Features.Players
     [TestFixture, Category("Integration")]
     internal class PlayerTests : IntegrationTestBase
     {
-        private const string AggregateType = "Player";
         private readonly PlayerId _playerId = new PlayerId(new Guid("94A2FE3A-1C6D-47DF-86DB-E235DC3F0EDF"));
         private readonly Name _userName = new Name("arnar.heimisson");
         private readonly Name _displayName = new Name("Arnar");
@@ -28,13 +31,15 @@ namespace EloMatches.Tests.Integration.Features.Players
             await Command(new CreatePlayerCommand(_playerId, _userName, _displayName, _emailAddress));
 
             var player = await Query<PlayerByIdQuery, PlayerProjection>(new PlayerByIdQuery(_playerId));
-
-            var domainEvents = await QueryDomainEvents(_playerId.ToString(), AggregateType);
+            var playerRanking = await Query<PlayerRankingByIdQuery, PlayerRankingProjection>(new PlayerRankingByIdQuery(_playerId));
+            var domainEvents = await QueryDomainEvents(_playerId.ToString(), null);
             
             player.AssertPlayer(_playerId, _userName, _displayName, _emailAddress, true);
+            playerRanking.AssertPlayerRankingWithNoGamesPlayed(_playerId);
 
-            domainEvents.VerifyDomainEventCount(1);
+            domainEvents.VerifyDomainEventCount(2);
             domainEvents.VerifyThatSingleDomainEventOccurred<PlayerCreated>();
+            domainEvents.VerifyThatSingleDomainEventOccurred<PlayerRankingCreated>();
         }
 
         [Test]
@@ -46,13 +51,14 @@ namespace EloMatches.Tests.Integration.Features.Players
             await Command(new ChangePlayerNamesCommand(_playerId, userName, _displayName));
 
             var player = await Query<PlayerByIdQuery, PlayerProjection>(new PlayerByIdQuery(_playerId));
-
-            var domainEvents = await QueryDomainEvents(_playerId.ToString(), AggregateType);
+            
+            var domainEvents = await QueryDomainEvents(_playerId.ToString(), null);
 
             player.AssertPlayer(_playerId, userName, _displayName, _emailAddress, true);
 
-            domainEvents.VerifyDomainEventCount(2);
+            domainEvents.VerifyDomainEventCount(3);
             domainEvents.VerifyThatSingleDomainEventOccurred<PlayerCreated>();
+            domainEvents.VerifyThatSingleDomainEventOccurred<PlayerRankingCreated>();
             domainEvents.VerifyThatSingleDomainEventOccurred<PlayerUserNameChanged>();
         }
 
@@ -66,12 +72,13 @@ namespace EloMatches.Tests.Integration.Features.Players
 
             var player = await Query<PlayerByIdQuery, PlayerProjection>(new PlayerByIdQuery(_playerId));
 
-            var domainEvents = await QueryDomainEvents(_playerId.ToString(), AggregateType);
+            var domainEvents = await QueryDomainEvents(_playerId.ToString(), null);
 
             player.AssertPlayer(_playerId, _userName, displayName, _emailAddress, true);
 
-            domainEvents.VerifyDomainEventCount(2);
+            domainEvents.VerifyDomainEventCount(3);
             domainEvents.VerifyThatSingleDomainEventOccurred<PlayerCreated>();
+            domainEvents.VerifyThatSingleDomainEventOccurred<PlayerRankingCreated>();
             domainEvents.VerifyThatSingleDomainEventOccurred<PlayerDisplayNameChanged>();
         }
 
@@ -83,12 +90,13 @@ namespace EloMatches.Tests.Integration.Features.Players
 
             var player = await Query<PlayerByIdQuery, PlayerProjection>(new PlayerByIdQuery(_playerId));
 
-            var domainEvents = await QueryDomainEvents(_playerId.ToString(), AggregateType);
+            var domainEvents = await QueryDomainEvents(_playerId.ToString(), null);
 
             player.AssertPlayer(_playerId, _userName, _displayName, _emailAddress, true);
 
-            domainEvents.VerifyDomainEventCount(1);
+            domainEvents.VerifyDomainEventCount(2);
             domainEvents.VerifyThatSingleDomainEventOccurred<PlayerCreated>();
+            domainEvents.VerifyThatSingleDomainEventOccurred<PlayerRankingCreated>();
         }
 
         [Test]
@@ -101,12 +109,13 @@ namespace EloMatches.Tests.Integration.Features.Players
 
             var player = await Query<PlayerByIdQuery, PlayerProjection>(new PlayerByIdQuery(_playerId));
 
-            var domainEvents = await QueryDomainEvents(_playerId.ToString(), AggregateType);
+            var domainEvents = await QueryDomainEvents(_playerId.ToString(), null);
 
             player.AssertPlayer(_playerId, _userName, _displayName, emailAddress, true);
 
-            domainEvents.VerifyDomainEventCount(2);
+            domainEvents.VerifyDomainEventCount(3);
             domainEvents.VerifyThatSingleDomainEventOccurred<PlayerCreated>();
+            domainEvents.VerifyThatSingleDomainEventOccurred<PlayerRankingCreated>();
             domainEvents.VerifyThatSingleDomainEventOccurred<PlayerEmailChanged>();
         }
 
@@ -118,11 +127,12 @@ namespace EloMatches.Tests.Integration.Features.Players
 
             var player = await Query<PlayerByIdQuery, PlayerProjection>(new PlayerByIdQuery(_playerId));
 
-            var domainEvents = await QueryDomainEvents(_playerId.ToString(), AggregateType);
+            var domainEvents = await QueryDomainEvents(_playerId.ToString(), null);
 
             player.AssertPlayer(_playerId, _userName, _displayName, _emailAddress, true);
 
-            domainEvents.VerifyDomainEventCount(1);
+            domainEvents.VerifyDomainEventCount(2);
+            domainEvents.VerifyThatSingleDomainEventOccurred<PlayerRankingCreated>();
             domainEvents.VerifyThatSingleDomainEventOccurred<PlayerCreated>();
         }
 
@@ -134,12 +144,13 @@ namespace EloMatches.Tests.Integration.Features.Players
 
             var player = await Query<PlayerByIdQuery, PlayerProjection>(new PlayerByIdQuery(_playerId));
 
-            var domainEvents = await QueryDomainEvents(_playerId.ToString(), AggregateType);
+            var domainEvents = await QueryDomainEvents(_playerId.ToString(), null);
 
             player.AssertPlayer(_playerId, _userName, _displayName, _emailAddress, false);
 
-            domainEvents.VerifyDomainEventCount(2);
+            domainEvents.VerifyDomainEventCount(3);
             domainEvents.VerifyThatSingleDomainEventOccurred<PlayerCreated>();
+            domainEvents.VerifyThatSingleDomainEventOccurred<PlayerRankingCreated>();
             domainEvents.VerifyThatSingleDomainEventOccurred<PlayerDeactivated>();
         }
 
@@ -152,12 +163,13 @@ namespace EloMatches.Tests.Integration.Features.Players
 
             var player = await Query<PlayerByIdQuery, PlayerProjection>(new PlayerByIdQuery(_playerId));
 
-            var domainEvents = await QueryDomainEvents(_playerId.ToString(), AggregateType);
+            var domainEvents = await QueryDomainEvents(_playerId.ToString(), null);
 
             player.AssertPlayer(_playerId, _userName, _displayName, _emailAddress, true);
 
-            domainEvents.VerifyDomainEventCount(3);
+            domainEvents.VerifyDomainEventCount(4);
             domainEvents.VerifyThatSingleDomainEventOccurred<PlayerCreated>();
+            domainEvents.VerifyThatSingleDomainEventOccurred<PlayerRankingCreated>();
             domainEvents.VerifyThatSingleDomainEventOccurred<PlayerDeactivated>();
             domainEvents.VerifyThatSingleDomainEventOccurred<PlayerReactivated>();
         }
