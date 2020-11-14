@@ -40,9 +40,7 @@ namespace EloMatches.Api
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
             });
 
-            InitializeContainer();
-
-            services.AddHostedService(_ => new MassTransitBusHostedService(_container.GetInstance<IBusControl>()));
+            InitializeContainer(services);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -69,15 +67,17 @@ namespace EloMatches.Api
             _container.Verify();
         }
 
-        private void InitializeContainer()
+        private void InitializeContainer(IServiceCollection services)
         {
+            services.AddHostedService(_ => new MassTransitBusHostedService(_container.GetInstance<IBusControl>()));
+
             _container
                 .RegisterMediatorPipeline()
                 .RegisterPersistence(Configuration)
                 .RegisterQueryPipeline(Configuration)
                 .RegisterDomainEventProcessors()
                 .RegisterIntegrationEventPipeline()
-                .RegisterBusControl();
+                .RegisterBusControl(services);
         }
     }
 }
