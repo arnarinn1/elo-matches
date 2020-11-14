@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 namespace Logging.Metrics.Tests
 {
-    [Ignore("Run-Ad-Hoc")]
+    //[Ignore("Run-Ad-Hoc")]
     [TestFixture, Category("Debug")]
     public class SendQueryMetrics
     {
@@ -25,7 +25,12 @@ namespace Logging.Metrics.Tests
 
                 await endpoint.Send<LogQueryMetrics>(new
                 {
-                    Identifier = Guid.NewGuid()
+                    CorrelationId = Guid.NewGuid(),
+                    TimeStarted = new DateTime(2020, 11, 14, 10, 00, 00),
+                    TimeFinished = new DateTime(2020, 11, 14, 10, 00, 00),
+                    QueryTypeName = "PlayerByIdQuery",
+                    ExceptionMessage = null as string
+
                 });
             }
             finally
@@ -40,6 +45,10 @@ namespace Logging.Metrics.Consumers.QueryMetrics
 {
     public interface LogQueryMetrics
     {
-        Guid Identifier { get; }
+        Guid CorrelationId { get; }
+        DateTime TimeStarted { get; }
+        DateTime TimeFinished { get; }
+        string QueryTypeName { get; }
+        string? ExceptionMessage { get; }
     }
 }

@@ -6,6 +6,10 @@ using MassTransit;
 
 namespace Logging.Metrics
 {
+    //todo -> Use SimpleInjector
+    //todo -> Use .NET Generic Host
+    //todo -> Remove hardcoded ConnectionStrings in consumers
+    //todo -> Also pass in TransactionId?
     internal class Program
     {
         internal static async Task Main()

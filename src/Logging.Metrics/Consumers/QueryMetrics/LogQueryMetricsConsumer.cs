@@ -1,14 +1,30 @@
-﻿using System;
+﻿using System.Data;
 using System.Threading.Tasks;
+using Dapper;
 using MassTransit;
+using Microsoft.Data.SqlClient;
 
 namespace Logging.Metrics.Consumers.QueryMetrics
 {
     public class LogQueryMetricsConsumer : IConsumer<LogQueryMetrics>
     {
-        public Task Consume(ConsumeContext<LogQueryMetrics> context)
+        public async Task Consume(ConsumeContext<LogQueryMetrics> context)
         {
-            return Console.Out.WriteLineAsync("Consumed query metrics");
+            await using var connection = new SqlConnection("Server=localhost;Database=Metrics;Trusted_Connection=True;MultipleActiveResultSets=true");
+
+            var totalMilliseconds = (context.Message.TimeFinished - context.Message.TimeStarted).TotalMilliseconds;
+
+            var parameters = new
+            {
+                context.Message.CorrelationId,
+                context.Message.TimeStarted,
+                context.Message.TimeFinished,
+                totalMilliseconds,
+                context.Message.QueryTypeName,
+                context.Message.ExceptionMessage
+            };
+
+            await connection.ExecuteAsync("met.CreateQueryMetrics", parameters, commandType:CommandType.StoredProcedure);
         }
     }
 }
