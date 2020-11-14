@@ -51,7 +51,8 @@ namespace EloMatches.Tests.Integration
                 .RegisterPersistence(configuration)
                 .RegisterQueryPipeline(configuration)
                 .RegisterDomainEventProcessors()
-                .RegisterIntegrationEventPipeline();
+                .RegisterIntegrationEventPipeline()
+                .RegisterBusControl();
         }
 
         private static readonly Checkpoint Checkpoint = new Checkpoint {SchemasToInclude = new[] {"elo"}, DbAdapter = DbAdapter.SqlServer};
@@ -66,6 +67,7 @@ namespace EloMatches.Tests.Integration
         public virtual async Task RunAfterEachTest()
         {
             await Checkpoint.Reset(_connectionString);
+            //Move to before 
         }
 
         protected TInstance GetInstance<TInstance>() where TInstance : class

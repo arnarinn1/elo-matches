@@ -25,6 +25,7 @@ namespace EloMatches.Api.Infrastructure.CompositionRoot.WireUp
 
             container.Collection.Register(typeof(IPipelineBehavior<,>), new[]
             {
+                typeof(SendCommandMetricsThroughBusBehavior<,>),
                 typeof(LoggingBehavior<,>),
                 typeof(ValidatorBehavior<,>),
                 typeof(TransactionBehavior<,>),

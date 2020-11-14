@@ -1,4 +1,5 @@
-﻿using EloMatches.Query.Persistence;
+﻿using EloMatches.Api.Application.QueryBehaviors;
+using EloMatches.Query.Persistence;
 using EloMatches.Query.Pipeline;
 using EloMatches.Query.Pipeline.Behaviors;
 using EloMatches.Query.Providers.PagingProjections;
@@ -30,6 +31,7 @@ namespace EloMatches.Api.Infrastructure.CompositionRoot.WireUp
 
             container.Register(typeof(IQueryHandler<,>), typeof(QueryWireUp).Assembly);
             container.RegisterDecorator(typeof(IQueryHandler<,>), typeof(QueryLoggingBehavior<,>));
+            container.RegisterDecorator(typeof(IQueryHandler<,>), typeof(SendQueryMetricsThroughBusBehavior<,>));
 
             container.RegisterSingleton<IQueryDispatcher, QueryDispatcher>();
 

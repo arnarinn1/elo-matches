@@ -1,7 +1,9 @@
 using EloMatches.Api.Application.Middleware.Exceptions;
 using EloMatches.Api.Application.Middleware.RequestLogging;
 using EloMatches.Api.Extensions;
+using EloMatches.Api.Infrastructure.CompositionRoot.Implementations;
 using EloMatches.Api.Infrastructure.CompositionRoot.WireUp;
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -39,13 +41,15 @@ namespace EloMatches.Api
             });
 
             InitializeContainer();
+
+            services.AddHostedService(_ => new MassTransitBusHostedService(_container.GetInstance<IBusControl>()));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseSimpleInjector(_container);
 
-            app.UseRequestLogging(options => options.ShouldLogRequest = context => HttpContextExtensions.DetermineIfRequestShouldBeLogged(context, "/swagger/"));
+            app.UseRequestLogging(options => options.ShouldLogRequest = context => context.DetermineIfRequestShouldBeLogged("/swagger/"));
             app.UseApiExceptionHandler();
 
             app.UseSwagger();
@@ -72,7 +76,8 @@ namespace EloMatches.Api
                 .RegisterPersistence(Configuration)
                 .RegisterQueryPipeline(Configuration)
                 .RegisterDomainEventProcessors()
-                .RegisterIntegrationEventPipeline();
+                .RegisterIntegrationEventPipeline()
+                .RegisterBusControl();
         }
     }
 }
