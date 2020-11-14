@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
+using EloMatches.Shared.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -43,24 +44,13 @@ namespace EloMatches.Api.Application.Middleware.Exceptions
 
             _options.AddResponseDetails?.Invoke(context, exception, error);
 
-            var exceptionMessage = GetInnermostException(exception);
+            var exceptionMessage = exception.GetInnermostExceptionMessage();
             _logger.LogError(exception, "Error occured: {ExceptionMessage} -- ErrorId = {ErrorId}", exceptionMessage, error.Id);
 
             var result = JsonConvert.SerializeObject(error);
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             return context.Response.WriteAsync(result);
-        }
-
-        private static string GetInnermostException(Exception exception)
-        {
-            while (true)
-            {
-                if (exception.InnerException == null) 
-                    return exception.Message;
-
-                exception = exception.InnerException;
-            }
         }
     }
 }

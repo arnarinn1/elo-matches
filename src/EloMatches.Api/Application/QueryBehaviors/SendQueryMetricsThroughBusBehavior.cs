@@ -5,6 +5,7 @@ using EloMatches.Api.Application.Bus.EndpointSenders;
 using EloMatches.Api.Application.Bus.EndpointSenders.QueryMetrics;
 using EloMatches.Api.Infrastructure.CorrelationIds;
 using EloMatches.Query.Pipeline;
+using EloMatches.Shared.Extensions;
 
 namespace EloMatches.Api.Application.QueryBehaviors
 {
@@ -38,7 +39,7 @@ namespace EloMatches.Api.Application.QueryBehaviors
             catch (Exception e)
             {
                 queryMetrics.TimeFinished = DateTime.Now;
-                queryMetrics.ExceptionMessage = e.Message;
+                queryMetrics.ExceptionMessage = e.GetInnermostExceptionMessage();
 
                 await _endpointSender.Send(queryMetrics);
 

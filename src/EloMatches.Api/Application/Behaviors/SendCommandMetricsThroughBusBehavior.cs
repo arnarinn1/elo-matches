@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using EloMatches.Api.Application.Bus.EndpointSenders;
 using EloMatches.Api.Application.Bus.EndpointSenders.CommandMetrics;
 using EloMatches.Api.Infrastructure.CorrelationIds;
+using EloMatches.Shared.Extensions;
 using MediatR;
 
 namespace EloMatches.Api.Application.Behaviors
@@ -35,7 +36,7 @@ namespace EloMatches.Api.Application.Behaviors
             catch (Exception e)
             {
                 commandMetrics.TimeFinished = DateTime.Now;
-                commandMetrics.ExceptionMessage = e.Message;
+                commandMetrics.ExceptionMessage = e.GetInnermostExceptionMessage();
 
                 await _endpointSender.Send(commandMetrics);
 
