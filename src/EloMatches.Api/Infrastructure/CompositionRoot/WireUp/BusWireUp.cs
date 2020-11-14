@@ -4,7 +4,7 @@ using SimpleInjector;
 
 namespace EloMatches.Api.Infrastructure.CompositionRoot.WireUp
 {
-    public static class MassTransitWireUp
+    public static class BusWireUp
     {
         public static Container RegisterBusControl(this Container container)
         {

@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using EloMatches.Api.Application.Bus.EndpointSenders;
 using EloMatches.Api.Features.DomainEventOccurrences.Queries.DomainEventsByPaging;
 using EloMatches.Api.Infrastructure.CompositionRoot.WireUp;
 using EloMatches.Infrastructure.CommandPipeline;
@@ -51,23 +52,31 @@ namespace EloMatches.Tests.Integration
                 .RegisterPersistence(configuration)
                 .RegisterQueryPipeline(configuration)
                 .RegisterDomainEventProcessors()
-                .RegisterIntegrationEventPipeline()
-                .RegisterBusControl();
+                .RegisterIntegrationEventPipeline();
+
+            _container.Register(typeof(IEndpointSender<>),typeof(NoOpEndpointSender<>));
+        }
+
+        private class NoOpEndpointSender<T> : IEndpointSender<T>
+        {
+            public Task Send(T command)
+            {
+                return Task.CompletedTask;
+            }
         }
 
         private static readonly Checkpoint Checkpoint = new Checkpoint {SchemasToInclude = new[] {"elo"}, DbAdapter = DbAdapter.SqlServer};
 
         [SetUp]
-        public virtual void SetUpBeforeEachTest()
+        public virtual async Task SetUpBeforeEachTest()
         {
-
+            await Checkpoint.Reset(_connectionString);
         }
 
         [TearDown]
-        public virtual async Task RunAfterEachTest()
+        public virtual void RunAfterEachTest()
         {
-            await Checkpoint.Reset(_connectionString);
-            //Move to before 
+
         }
 
         protected TInstance GetInstance<TInstance>() where TInstance : class
