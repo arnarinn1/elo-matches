@@ -1,9 +1,7 @@
 using EloMatches.Api.Application.Middleware.Exceptions;
 using EloMatches.Api.Application.Middleware.RequestLogging;
 using EloMatches.Api.Extensions;
-using EloMatches.Api.Infrastructure.CompositionRoot.Implementations;
 using EloMatches.Api.Infrastructure.CompositionRoot.WireUp;
-using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -69,15 +67,14 @@ namespace EloMatches.Api
 
         private void InitializeContainer(IServiceCollection services)
         {
-            services.AddHostedService(_ => new MassTransitBusHostedService(_container.GetInstance<IBusControl>()));
-
             _container
                 .RegisterMediatorPipeline()
                 .RegisterPersistence(Configuration)
                 .RegisterQueryPipeline(Configuration)
                 .RegisterDomainEventProcessors()
                 .RegisterIntegrationEventPipeline()
-                .RegisterBusControl(services);
+                .RegisterBusControl(services)
+                .RegisterCorrelationIdServices();
         }
     }
 }

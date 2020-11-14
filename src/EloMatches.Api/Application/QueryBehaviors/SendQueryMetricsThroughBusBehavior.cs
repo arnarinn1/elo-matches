@@ -3,26 +3,28 @@ using System.Threading;
 using System.Threading.Tasks;
 using EloMatches.Api.Application.Bus.EndpointSenders;
 using EloMatches.Api.Application.Bus.EndpointSenders.QueryMetrics;
+using EloMatches.Api.Infrastructure.CorrelationIds;
 using EloMatches.Query.Pipeline;
 
 namespace EloMatches.Api.Application.QueryBehaviors
 {
-    //todo -> CorrelationId
     public class SendQueryMetricsThroughBusBehavior<TQuery, TResponse> : IQueryHandler<TQuery, TResponse>
         where TQuery : IQuery<TResponse>
     {
         private readonly IQueryHandler<TQuery, TResponse> _next;
         private readonly IEndpointSender<LogQueryMetricsCommand> _endpointSender;
+        private readonly ICorrelationIdAccessor _correlationIdAccessor;
 
-        public SendQueryMetricsThroughBusBehavior(IQueryHandler<TQuery, TResponse> next, IEndpointSender<LogQueryMetricsCommand> endpointSender)
+        public SendQueryMetricsThroughBusBehavior(IQueryHandler<TQuery, TResponse> next, IEndpointSender<LogQueryMetricsCommand> endpointSender, ICorrelationIdAccessor correlationIdAccessor)
         {
             _next = next ?? throw new ArgumentNullException(nameof(next));
             _endpointSender = endpointSender;
+            _correlationIdAccessor = correlationIdAccessor ?? throw new ArgumentNullException(nameof(correlationIdAccessor));
         }
 
         public async Task<TResponse> ExecuteAsync(TQuery query, CancellationToken cancellationToken = default)
         {
-            var queryMetrics = new LogQueryMetricsCommand(Guid.NewGuid(), DateTime.Now, query.GetType().Name);
+            var queryMetrics = new LogQueryMetricsCommand(_correlationIdAccessor.GetCorrelationId(), DateTime.Now, query.GetType().Name);
 
             TResponse response;
 
