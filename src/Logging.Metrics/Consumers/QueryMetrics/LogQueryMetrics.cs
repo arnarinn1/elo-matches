@@ -9,5 +9,6 @@ namespace Logging.Metrics.Consumers.QueryMetrics
         DateTime TimeStarted { get; }
         DateTime TimeFinished { get; }
         string QueryTypeName { get; }
+        string? ExceptionMessage { get; }
     }
 }

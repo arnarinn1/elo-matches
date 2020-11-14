@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 
 namespace Logging.Metrics.Consumers.CommandMetrics
 {
@@ -9,5 +10,6 @@ namespace Logging.Metrics.Consumers.CommandMetrics
         DateTime TimeStarted { get; }
         DateTime TimeFinished { get; }
         string CommandTypeName { get; }
+        string? ExceptionMessage { get; }
     }
 }
