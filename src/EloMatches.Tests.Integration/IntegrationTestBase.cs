@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using EloMatches.Api.Application.Bus.EndpointSenders;
 using EloMatches.Api.Features.DomainEventOccurrences.Queries.DomainEventsByPaging;
 using EloMatches.Api.Infrastructure.CompositionRoot.WireUp;
+using EloMatches.Api.Infrastructure.CorrelationIds;
 using EloMatches.Infrastructure.CommandPipeline;
 using EloMatches.Query.Paging;
 using EloMatches.Query.Pipeline;
@@ -54,7 +55,17 @@ namespace EloMatches.Tests.Integration
                 .RegisterDomainEventProcessors()
                 .RegisterIntegrationEventPipeline();
 
+            _container.Register<ICorrelationIdAccessor, CorrelationIdAccessor>(Lifestyle.Scoped);
+
             _container.Register(typeof(IEndpointSender<>),typeof(NoOpEndpointSender<>));
+        }
+
+        private class CorrelationIdAccessor : ICorrelationIdAccessor
+        {
+            public Guid GetCorrelationId()
+            {
+                return Guid.NewGuid();
+            }
         }
 
         private class NoOpEndpointSender<T> : IEndpointSender<T>
