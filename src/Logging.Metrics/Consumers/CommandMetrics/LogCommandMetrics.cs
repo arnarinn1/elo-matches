@@ -1,7 +1,7 @@
 ﻿#nullable enable
 using System;
 
-namespace Logging.Metrics.Consumers.CommandMetrics
+namespace Metrics.Logging.Consumers.CommandMetrics
 {
     // ReSharper disable once InconsistentNaming
     public interface LogCommandMetrics

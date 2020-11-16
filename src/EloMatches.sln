@@ -31,9 +31,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EloMatches.Tests.Integratio
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5.Metrics", "5.Metrics", "{AD9EF702-1319-4FB6-A21C-C9792893AAF6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logging.Metrics", "Logging.Metrics\Logging.Metrics.csproj", "{68DC33FF-F09F-40F5-A428-C53D5CD6FB85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Metrics.Logging", "Logging.Metrics\Metrics.Logging.csproj", "{68DC33FF-F09F-40F5-A428-C53D5CD6FB85}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logging.Metrics.Tests", "Logging.Metrics.Tests\Logging.Metrics.Tests.csproj", "{DED0067E-7317-4A3D-82E9-B4F82F40C62C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Metrics.Logging.Tests", "Logging.Metrics.Tests\Metrics.Logging.Tests.csproj", "{DED0067E-7317-4A3D-82E9-B4F82F40C62C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

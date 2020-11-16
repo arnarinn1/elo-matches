@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Logging.Metrics.Consumers.CommandMetrics;
-using Logging.Metrics.Consumers.QueryMetrics;
 using MassTransit;
+using Metrics.Logging.Consumers.CommandMetrics;
+using Metrics.Logging.Consumers.QueryMetrics;
 
-namespace Logging.Metrics
+namespace Metrics.Logging
 {
     //todo -> Use SimpleInjector
     //todo -> Use .NET Generic Host

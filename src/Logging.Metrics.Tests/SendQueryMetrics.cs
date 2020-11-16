@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using Logging.Metrics.Consumers.QueryMetrics;
 using MassTransit;
+using Metrics.Logging.Consumers.QueryMetrics;
 using NUnit.Framework;
 
 // ReSharper disable InconsistentNaming
@@ -41,7 +41,7 @@ namespace Logging.Metrics.Tests
     }
 }
 
-namespace Logging.Metrics.Consumers.QueryMetrics
+namespace Metrics.Logging.Consumers.QueryMetrics
 {
     public interface LogQueryMetrics
     {

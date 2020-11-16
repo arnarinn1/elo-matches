@@ -1,7 +1,7 @@
 ﻿#nullable enable
 using System;
 
-namespace Logging.Metrics.Consumers.QueryMetrics
+namespace Metrics.Logging.Consumers.QueryMetrics
 {
     // ReSharper disable once InconsistentNaming
     public interface LogQueryMetrics

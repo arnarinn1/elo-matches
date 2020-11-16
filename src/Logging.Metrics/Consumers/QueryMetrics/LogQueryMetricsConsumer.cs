@@ -4,7 +4,7 @@ using Dapper;
 using MassTransit;
 using Microsoft.Data.SqlClient;
 
-namespace Logging.Metrics.Consumers.QueryMetrics
+namespace Metrics.Logging.Consumers.QueryMetrics
 {
     public class LogQueryMetricsConsumer : IConsumer<LogQueryMetrics>
     {

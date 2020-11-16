@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Logging.Metrics.Consumers.QueryMetrics;
 using MassTransit;
+using Metrics.Logging.Consumers.QueryMetrics;
 
 namespace EloMatches.Api.Application.Bus.EndpointSenders.QueryMetrics
 {
@@ -33,7 +33,7 @@ namespace EloMatches.Api.Application.Bus.EndpointSenders.QueryMetrics
 
 // ReSharper disable once CheckNamespace
 // ReSharper disable InconsistentNaming
-namespace Logging.Metrics.Consumers.QueryMetrics
+namespace Metrics.Logging.Consumers.QueryMetrics
 {
     public interface LogQueryMetrics
     {
