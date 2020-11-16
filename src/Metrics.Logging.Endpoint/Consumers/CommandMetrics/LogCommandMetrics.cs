@@ -1,7 +1,8 @@
 ﻿#nullable enable
 using System;
 
-namespace Metrics.Logging.Consumers.CommandMetrics
+// ReSharper disable CheckNamespace
+namespace Metrics.Logging.CommandMetrics
 {
     // ReSharper disable once InconsistentNaming
     public interface LogCommandMetrics

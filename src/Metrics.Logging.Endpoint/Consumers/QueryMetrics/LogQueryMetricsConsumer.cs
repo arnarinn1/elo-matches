@@ -2,13 +2,14 @@
 using System.Threading.Tasks;
 using Dapper;
 using MassTransit;
+using Metrics.Logging.QueryMetrics;
 using Microsoft.Data.SqlClient;
 
-namespace Metrics.Logging.Consumers.CommandMetrics
+namespace Metrics.Logging.Endpoint.Consumers.QueryMetrics
 {
-    public class LogCommandMetricsConsumer : IConsumer<LogCommandMetrics>
+    public class LogQueryMetricsConsumer : IConsumer<LogQueryMetrics>
     {
-        public async Task Consume(ConsumeContext<LogCommandMetrics> context)
+        public async Task Consume(ConsumeContext<LogQueryMetrics> context)
         {
             await using var connection = new SqlConnection("Server=localhost;Database=Metrics;Trusted_Connection=True;MultipleActiveResultSets=true");
 
@@ -20,11 +21,11 @@ namespace Metrics.Logging.Consumers.CommandMetrics
                 context.Message.TimeStarted,
                 context.Message.TimeFinished,
                 totalMilliseconds,
-                context.Message.CommandTypeName,
+                context.Message.QueryTypeName,
                 context.Message.ExceptionMessage
             };
 
-            await connection.ExecuteAsync("met.CreateCommandMetrics", parameters, commandType: CommandType.StoredProcedure);
+            await connection.ExecuteAsync("met.CreateQueryMetrics", parameters, commandType:CommandType.StoredProcedure);
         }
     }
 }
