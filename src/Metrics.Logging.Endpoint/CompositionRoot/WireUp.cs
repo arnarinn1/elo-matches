@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using MassTransit;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -12,19 +13,21 @@ namespace Metrics.Logging.Endpoint.CompositionRoot
         {
             var connectionString = context.Configuration["ConnectionString"];
 
+            var massTransitConfigSection = context.Configuration.GetSection("MassTransit").Get<MassTransitConfiguration>();
+
             services.AddMassTransit(config =>
             {
                 config.AddConsumers(typeof(Program).Assembly);
 
-                config.UsingRabbitMq((busContext, rabbitMqConfig) =>
+                config.UsingRabbitMq((busContext, rabbitMqConfigurator) =>
                 {
-                    rabbitMqConfig.Host("localhost", "/", x =>
+                    rabbitMqConfigurator.Host(massTransitConfigSection.Host, massTransitConfigSection.VirtualHost, x =>
                     {
-                        x.Username("guest");
-                        x.Password("guest");
+                        x.Username(massTransitConfigSection.Username);
+                        x.Password(massTransitConfigSection.Password);
                     });
 
-                    rabbitMqConfig.ConfigureEndpoints(busContext);
+                    rabbitMqConfigurator.ConfigureEndpoints(busContext);
                 });
             });
 

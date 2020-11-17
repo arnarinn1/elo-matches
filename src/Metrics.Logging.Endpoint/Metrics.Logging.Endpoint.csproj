@@ -26,4 +26,8 @@
     <PackageReference Include="microsoft.extensions.hosting" Version="5.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EloMatches.Shared\EloMatches.Shared.csproj" />
+  </ItemGroup>
+
 </Project>
