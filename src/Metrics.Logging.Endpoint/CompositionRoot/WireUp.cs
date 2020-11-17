@@ -1,4 +1,6 @@
-﻿using MassTransit;
+﻿using System.Data;
+using MassTransit;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -8,6 +10,8 @@ namespace Metrics.Logging.Endpoint.CompositionRoot
     {
         public static void RegisterServices(HostBuilderContext context, IServiceCollection services)
         {
+            var connectionString = context.Configuration["ConnectionString"];
+
             services.AddMassTransit(config =>
             {
                 config.AddConsumers(typeof(Program).Assembly);
@@ -23,6 +27,8 @@ namespace Metrics.Logging.Endpoint.CompositionRoot
                     rabbitMqConfig.ConfigureEndpoints(busContext);
                 });
             });
+
+            services.AddScoped<IDbConnection>(_ => new SqlConnection(connectionString));
 
             services.AddHostedService<HostedServiceForBusControl>();
         }
