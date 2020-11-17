@@ -53,11 +53,10 @@ namespace EloMatches.Tests.Integration
                 .RegisterPersistence(configuration)
                 .RegisterQueryPipeline(configuration)
                 .RegisterDomainEventProcessors()
-                .RegisterIntegrationEventPipeline();
+                .RegisterIntegrationEventPipeline()
+                .RegisterBusControl(configuration, null);
 
             _container.Register<ICorrelationIdAccessor, CorrelationIdAccessor>(Lifestyle.Scoped);
-
-            _container.Register(typeof(IEndpointSender<>),typeof(NoOpEndpointSender<>));
         }
 
         private class CorrelationIdAccessor : ICorrelationIdAccessor

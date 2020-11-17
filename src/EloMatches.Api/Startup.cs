@@ -73,7 +73,7 @@ namespace EloMatches.Api
                 .RegisterQueryPipeline(Configuration)
                 .RegisterDomainEventProcessors()
                 .RegisterIntegrationEventPipeline()
-                .RegisterBusControl(services)
+                .RegisterBusControl(Configuration, services)
                 .RegisterCorrelationIdServices();
         }
     }
