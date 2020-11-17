@@ -18,14 +18,12 @@ namespace Metrics.Logging.Endpoint.Consumers.CommandMetrics
 
         public async Task Consume(ConsumeContext<LogCommandMetrics> context)
         {
-            var totalMilliseconds = (context.Message.TimeFinished - context.Message.TimeStarted).TotalMilliseconds;
-
             var parameters = new
             {
                 context.Message.CorrelationId,
                 context.Message.TimeStarted,
                 context.Message.TimeFinished,
-                totalMilliseconds,
+                totalMilliseconds = (context.Message.TimeFinished - context.Message.TimeStarted).TotalMilliseconds,
                 context.Message.CommandTypeName,
                 context.Message.ExceptionMessage
             };

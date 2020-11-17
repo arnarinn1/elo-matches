@@ -11,6 +11,7 @@ CREATE TABLE elo.DomainEventOccurrence
 , SerializedData          VARCHAR(1024)     NOT NULL
 , OccurrenceDate          DATETIME          NOT NULL
 , TransactionId           UNIQUEIDENTIFIER      NULL
+, CorrelationId           UNIQUEIDENTIFIER      NULL
 )
 GO
 

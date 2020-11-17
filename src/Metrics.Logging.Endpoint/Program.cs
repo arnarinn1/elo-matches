@@ -5,8 +5,6 @@ using Microsoft.Extensions.Hosting;
 
 namespace Metrics.Logging.Endpoint
 {
-    //todo -> Also pass in CorrelationId.
-    //todo -> Logging
     internal class Program
     {
         public static void Main(string[] args)

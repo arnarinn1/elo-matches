@@ -19,7 +19,7 @@ namespace EloMatches.Api.Application.QueryBehaviors
         public SendQueryMetricsThroughBusBehavior(IQueryHandler<TQuery, TResponse> next, IEndpointSender<LogQueryMetricsCommand> endpointSender, ICorrelationIdAccessor correlationIdAccessor)
         {
             _next = next ?? throw new ArgumentNullException(nameof(next));
-            _endpointSender = endpointSender;
+            _endpointSender = endpointSender ?? throw new ArgumentNullException(nameof(endpointSender));
             _correlationIdAccessor = correlationIdAccessor ?? throw new ArgumentNullException(nameof(correlationIdAccessor));
         }
 

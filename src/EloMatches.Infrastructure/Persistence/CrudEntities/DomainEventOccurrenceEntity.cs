@@ -6,7 +6,7 @@ namespace EloMatches.Infrastructure.Persistence.CrudEntities
 {
     public class DomainEventOccurrenceEntity
     {
-        public DomainEventOccurrenceEntity(IDomainEvent domainEvent, Guid? transactionId)
+        public DomainEventOccurrenceEntity(IDomainEvent domainEvent, Guid? transactionId, Guid? correlationId)
         {
             AggregateId = domainEvent.AggregateId;
             AggregateType = domainEvent.AggregateType;
@@ -14,6 +14,7 @@ namespace EloMatches.Infrastructure.Persistence.CrudEntities
             SerializedData = JsonSerializer.Serialize(domainEvent, domainEvent.GetType());
             OccurrenceDate = domainEvent.OccurrenceTime;
             TransactionId = transactionId;
+            CorrelationId = correlationId;
         }
 
         private DomainEventOccurrenceEntity() {}
@@ -25,5 +26,6 @@ namespace EloMatches.Infrastructure.Persistence.CrudEntities
         public string SerializedData { get; set; }
         public DateTime OccurrenceDate { get; set; }
         public Guid? TransactionId { get; set; }
+        public Guid? CorrelationId { get; set; }
     }
 }
