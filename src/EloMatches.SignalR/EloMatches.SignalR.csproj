@@ -5,10 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="IntegrationEventHandlers\" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="MassTransit.AspNetCore" Version="7.0.6" />
     <PackageReference Include="masstransit.rabbitmq" Version="7.0.6" />
   </ItemGroup>
 
